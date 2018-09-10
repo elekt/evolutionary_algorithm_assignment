@@ -6,8 +6,8 @@ import java.util.Properties;
 
 public class player2 implements ContestSubmission
 {
-	Random rnd_;
-	ContestEvaluation evaluation_;
+	private Random rnd_;
+	private ContestEvaluation evaluation_;
     private int evaluations_limit_;
 	
 	public player2()
@@ -55,7 +55,7 @@ public class player2 implements ContestSubmission
             // Select parents
             // Apply crossover / mutation operators
             double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-            // Check fitness of unknown fuction
+            // Check fitness of unknown function
             Double fitness = (double) evaluation_.evaluate(child);
             evals++;
             // Select survivors
