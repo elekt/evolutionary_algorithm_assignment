@@ -9,7 +9,8 @@ public class player2 implements ContestSubmission
 	private Random rnd_;
 	private ContestEvaluation evaluation_;
     private int evaluations_limit_;
-	
+	private Population population;
+
 	public player2()
 	{
 		rnd_ = new Random();
@@ -46,19 +47,19 @@ public class player2 implements ContestSubmission
     
 	public void run()
 	{
-		// Run your algorithm here
-        
-        int evals = 0;
+	    int evals = 0;
+
         // init population
+        population = new Population(10, rnd_);
         // calculate fitness
         while(evals<evaluations_limit_){
             // Select parents
-            // Apply crossover / mutation operators
-            double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-            // Check fitness of unknown function
-            Double fitness = (double) evaluation_.evaluate(child);
-            evals++;
-            // Select survivors
+            Double currentFitness = population.evaluatePopulation(evaluation_);
+
+            population.nextGeneration();
+
+            System.out.println(currentFitness);
+            evals += population.getPopulationSize();
         }
 
 	}
