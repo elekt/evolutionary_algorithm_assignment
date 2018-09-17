@@ -9,11 +9,16 @@ public class Population {
     private List<Individual> individuals;
     private int population_size;
     private Random rnd;
+    private Crossover crossover;
+    private Mutation mutation;
 
     public Population(int _size, Random _rnd) {
         population_size = _size;
         individuals = new ArrayList<>();
         rnd = _rnd;
+
+        crossover = new DummyCrossover();
+        mutation = new DummyMutation();
 
         for(int i=0; i<population_size; ++i){
             individuals.add(new Individual(rnd));
@@ -33,26 +38,6 @@ public class Population {
         return maxFitness;
     }
 
-    private List<Individual> crossover() {
-        // select fittest parents
-        Collections.sort(individuals);
-
-        List<Individual> parents = individuals.subList(0, 4);
-
-        // TODO do the crossover X
-        List<Individual> children = new ArrayList<>();
-        double[] firstChild = new double[10];
-        double[] secondChild = new double[10];
-        for (int i = 0; i < 10; i++) {
-            firstChild[i] = (parents.get(0).getGenome()[i] + parents.get(1).getGenome()[i]) / 2.0;
-            secondChild[i] = (parents.get(2).getGenome()[i] + parents.get(3).getGenome()[i]) / 2.0;
-        }
-        children.add(new Individual(firstChild));
-        children.add(new Individual(secondChild));
-
-        return children;
-    }
-
     private List<Individual> mutation(List<Individual> entitiesToMutate) {
         // TODO with some probability do mutation
 
@@ -60,11 +45,12 @@ public class Population {
     }
 
     public void nextGeneration() {
-        List<Individual> newEntities = crossover();
-        mutation(newEntities);
 
-        individuals = individuals.subList(0, individuals.size() - newEntities.size());
-        individuals.addAll(newEntities);
+        Collections.sort(individuals);
+
+        Individual child = crossover.crossover(individuals.get(0), individuals.get(1));
+        Individual mutatedChild = mutation.mutate(child);
+
 
         System.out.println("Size of population: " + getPopulationSize());
     }
