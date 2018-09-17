@@ -1,6 +1,16 @@
 # Log file
 *.log
 
+Population.class
+Individual.class
+Entity.class
+
+.DS_Store
+.metadata/
+assignmentfiles_2017.iml
+tmp/
+
+
 # BlueJ files
 *.ctxt
 

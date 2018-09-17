@@ -50,10 +50,10 @@ public class player2 implements ContestSubmission
 	    int evals = 0;
 
         // init population
-        population = new Population(10, rnd);
+        population = new Population(20, rnd);
         // calculate fitness
         double currentFitness = 0.0;
-        while(currentFitness >= 9.0 || evals< evaluations_limit){
+        while(currentFitness >= 9.0 || evals < evaluations_limit){
             // Select parents
             currentFitness = population.evaluatePopulation(evaluation);
 
@@ -62,7 +62,6 @@ public class player2 implements ContestSubmission
             System.out.println(currentFitness);
             evals += population.getPopulationSize();
         }
-
 	}
 }
 
