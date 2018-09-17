@@ -8,23 +8,23 @@ import java.util.Random;
 public class Population {
     private List<Individual> individuals;
     private int population_size;
-    private Random random;
+    private Random rnd;
 
     public Population(int _size, Random _rnd) {
         population_size = _size;
         individuals = new ArrayList<>();
-        random = _rnd;
+        rnd = _rnd;
 
         for(int i=0; i<population_size; ++i){
-            individuals.add(new Individual(random));
+            individuals.add(new Individual(rnd));
         }
     }
 
-    public Double evaluatePopulation(ContestEvaluation evaluation) {
-        Double maxFitness = 0.0;
+    public double evaluatePopulation(ContestEvaluation evaluation) {
+        double maxFitness = 0.0;
 
         for (Individual individual : individuals) {
-            Double fitness = (double) evaluation.evaluate(individual.getGenome());
+            double fitness = (double) evaluation.evaluate(individual.getGenome());
             individual.setFitness(fitness);
             if(fitness > maxFitness) {
                 maxFitness = fitness;
@@ -67,6 +67,11 @@ public class Population {
         individuals.addAll(newEntities);
 
         System.out.println("Size of population: " + getPopulationSize());
+    }
+
+    public Individual getFittest() {
+        Collections.sort(individuals);
+        return individuals.get(0);
     }
 
     public int getPopulationSize() {

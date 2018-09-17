@@ -6,31 +6,31 @@ import java.util.Properties;
 
 public class player2 implements ContestSubmission
 {
-	private Random rnd_;
-	private ContestEvaluation evaluation_;
-    private int evaluations_limit_;
+	private Random rnd;
+	private ContestEvaluation evaluation;
+    private int evaluations_limit;
 	private Population population;
 
 	public player2()
 	{
-		rnd_ = new Random();
+		rnd = new Random();
 	}
 	
 	public void setSeed(long seed)
 	{
 		// Set seed of algortihms random process
-		rnd_.setSeed(seed);
+		rnd.setSeed(seed);
 	}
 
 	public void setEvaluation(ContestEvaluation evaluation)
 	{
 		// Set evaluation problem used in the run
-		evaluation_ = evaluation;
+		this.evaluation = evaluation;
 		
 		// Get evaluation properties
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
-        evaluations_limit_ = Integer.parseInt(props.getProperty("Evaluations"));
+        evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -50,11 +50,12 @@ public class player2 implements ContestSubmission
 	    int evals = 0;
 
         // init population
-        population = new Population(10, rnd_);
+        population = new Population(10, rnd);
         // calculate fitness
-        while(evals<evaluations_limit_){
+        double currentFitness = 0.0;
+        while(currentFitness >= 9.0 || evals< evaluations_limit){
             // Select parents
-            Double currentFitness = population.evaluatePopulation(evaluation_);
+            currentFitness = population.evaluatePopulation(evaluation);
 
             population.nextGeneration();
 
