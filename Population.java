@@ -45,8 +45,6 @@ public class Population {
         List<Individual> child = crossover.crossover(individuals.get(0), individuals.get(1));
         Individual mutatedChild = mutation.mutate(child.get(0));
 
-
-        System.out.println("Size of population: " + getPopulationSize());
     }
 
     public Individual getFittest() {

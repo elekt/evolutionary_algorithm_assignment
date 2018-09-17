@@ -64,6 +64,3 @@ public class player2 implements ContestSubmission
         }
 	}
 }
-
-
-
