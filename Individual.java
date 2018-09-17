@@ -28,6 +28,9 @@ public class Individual implements Comparable<Individual>{
         if(value > maxValue || value < minValue) {
             System.out.println("Invalid value for ");
         }
+        // if position is > 9, ERR: out of array range
+
+        // genome[position] = value; 
     }
 
     public Double getFitness() {

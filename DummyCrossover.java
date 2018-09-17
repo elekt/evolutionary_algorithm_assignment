@@ -7,6 +7,8 @@ public class DummyCrossover implements Crossover {
     public List<Individual> crossover(Individual individual1, Individual individual2) {
         double[] child = new double[10];
         for (int i = 0; i < 10; i++) {
+
+            // TO DO: implement a real crossover method
             child[i] = (individual1.getGenome()[i] + individual2.getGenome()[i]) / 2.0;
         }
 
