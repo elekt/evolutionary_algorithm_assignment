@@ -4,6 +4,7 @@ public class DummyMutation implements Mutation {
 
     @Override
     public Individual mutate(Individual individual) {
-        return null;
+        individual.setGene(0, 0);
+        return individual;
     }
 }

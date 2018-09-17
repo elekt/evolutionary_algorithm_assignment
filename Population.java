@@ -38,18 +38,12 @@ public class Population {
         return maxFitness;
     }
 
-    private List<Individual> mutation(List<Individual> entitiesToMutate) {
-        // TODO with some probability do mutation
-
-        return entitiesToMutate;
-    }
-
     public void nextGeneration() {
 
         Collections.sort(individuals);
 
-        Individual child = crossover.crossover(individuals.get(0), individuals.get(1));
-        Individual mutatedChild = mutation.mutate(child);
+        List<Individual> child = crossover.crossover(individuals.get(0), individuals.get(1));
+        Individual mutatedChild = mutation.mutate(child.get(0));
 
 
         System.out.println("Size of population: " + getPopulationSize());

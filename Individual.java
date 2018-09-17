@@ -24,6 +24,12 @@ public class Individual implements Comparable<Individual>{
         return genome;
     }
 
+    public void setGene(int position, int value) {
+        if(value > maxValue || value < minValue) {
+            System.out.println("Invalid value for ");
+        }
+    }
+
     public Double getFitness() {
         return fitness;
     }
