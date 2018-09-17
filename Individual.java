@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Entity implements Comparable<Entity>{
+public class Individual implements Comparable<Individual>{
 
 
     private double[] genome;
@@ -9,14 +9,14 @@ public class Entity implements Comparable<Entity>{
     private int minValue = -5;
     private int dimensions = 10;
 
-    public Entity(Random _rnd) {
+    public Individual(Random _rnd) {
         genome = new double[dimensions];
         for(int i=0; i<dimensions; ++i){
             genome[i] = _rnd.nextDouble()*(maxValue-minValue) - maxValue;
         }
     }
 
-    public Entity(double[] _genome) {
+    public Individual(double[] _genome) {
         genome = _genome;
     }
 
@@ -33,7 +33,7 @@ public class Entity implements Comparable<Entity>{
     }
 
     @Override
-    public int compareTo(Entity other) {
+    public int compareTo(Individual other) {
         return this.fitness.compareTo(other.fitness);
     }
 }
