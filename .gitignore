@@ -1,15 +1,15 @@
 # Log file
 *.log
 
-Population.class
-Individual.class
-Entity.class
+*.class
+
 
 .DS_Store
 .metadata/
 assignmentfiles_2017.iml
 tmp/
 
+submission.jar
 
 # BlueJ files
 *.ctxt
