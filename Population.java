@@ -50,9 +50,6 @@ public class Population {
         Individual mutatedChild = mutation.mutate(child.get(0));
 
         // TO DO: update population by adding the new individuals and remove (worst?) old ones
-
-
-        System.out.println("Size of population: " + getPopulationSize());
     }
 
     public Individual getFittest() {
