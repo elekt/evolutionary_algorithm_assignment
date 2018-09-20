@@ -5,8 +5,8 @@ public class Individual implements Comparable<Individual>{
 
     private double[] genome;
     private Double fitness = 0.0;
-    private int maxValue = 5;
-    private int minValue = -5;
+    private double maxValue = 5;
+    private double minValue = -5;
     private int dimensions = 10;
 
     public Individual(Random _rnd) {
@@ -24,13 +24,26 @@ public class Individual implements Comparable<Individual>{
         return genome;
     }
 
-    public void setGene(int position, int value) {
-        if(value > maxValue || value < minValue) {
-            System.out.println("Invalid value for ");
-        }
-        // if position is > 9, ERR: out of array range
+    public void setGene(int i, double value) {
 
-        // genome[position] = value; 
+        if(i > genome.length || i < 0) {
+            throw new IllegalArgumentException("The genome has 10 genes. Trying to set on an invalid position");
+        }
+
+        if(Double.compare(value, maxValue) > 0) {
+            genome[i] = maxValue;
+        } else if(Double.compare(value, minValue) < 0) {
+            genome[i] = minValue;
+        } else {
+            genome[i] = value;
+        }
+    }
+
+    public double getGene(int i) {
+        if(i > genome.length || i < 0) {
+            throw new IllegalArgumentException("The genome has 10 genes. Trying to get from an invalid position");
+        }
+        return genome[i];
     }
 
     public Double getFitness() {
@@ -43,6 +56,15 @@ public class Individual implements Comparable<Individual>{
 
     @Override
     public int compareTo(Individual other) {
-        return this.fitness.compareTo(other.fitness);
+        return other.fitness.compareTo(this.fitness);
     }
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public double getMinValue() {
+        return minValue;
+    }
+
 }

@@ -50,7 +50,7 @@ public class player2 implements ContestSubmission
 	    int evals = 0;
 
         // init population
-        population = new Population(20, rnd);
+        population = new Population(2000, rnd);
         // calculate fitness
         while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents
@@ -63,9 +63,14 @@ public class player2 implements ContestSubmission
                 break;
             }
 
-            System.out.println(currentFitness);
             evals += population.getPopulationSize();
 
+            if(evals % 500 == 0) {
+                System.out.print("Score: ");
+                System.out.println(currentFitness);
+            }
+
         }
+        System.out.print("Best ");
 	}
 }

@@ -1,4 +1,8 @@
+import java.util.List;
 
 public interface Mutation {
-    Individual mutate(Individual individual);
+    void mutate(Individual individual);
+
+    void mutateIndividuals(List<Individual> individuals, double individualMutationProbability);
+
 }

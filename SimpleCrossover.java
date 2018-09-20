@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class DummyCrossover implements Crossover {
+public class SimpleCrossover implements Crossover {
 
     @Override
     public List<Individual> crossover(List<Individual> parents){
 
         if(parents.size() != 2) {
-            throw new IllegalArgumentException("DummyCrossover should have 2 parents");
+            throw new IllegalArgumentException("SimpleCrossover should have 2 parents");
         }
 
         double[] child1 = new double[10];
