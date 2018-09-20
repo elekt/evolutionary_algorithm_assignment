@@ -29,10 +29,6 @@ public class Population {
 
         for (Individual individual : individuals) {
             double fitness = (double) evaluation.evaluate(individual.getGenome());
-            if(fitness > 0.0) {
-                System.out.print("Fittness: ");
-                System.out.println(fitness);
-            }
             individual.setFitness(fitness);
             if(fitness > maxFitness) {
                 maxFitness = fitness;
