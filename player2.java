@@ -52,12 +52,16 @@ public class player2 implements ContestSubmission
         // init population
         population = new Population(20, rnd);
         // calculate fitness
-        double currentFitness = 0.0;
         while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents
-            currentFitness = population.evaluatePopulation(evaluation);
+			double currentFitness = population.evaluatePopulation(evaluation);
 
-            population.nextGeneration();
+            try {
+                population.nextGeneration();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                break;
+            }
 
             System.out.println(currentFitness);
             evals += population.getPopulationSize();

@@ -38,18 +38,19 @@ public class Population {
         return maxFitness;
     }
 
-    public void nextGeneration() {
+    public void nextGeneration() throws IllegalArgumentException {
 
-        // TO DO: create a better way of parent selection instead of just ranking and select the best individuals
+        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         Collections.sort(individuals);
 
-        // TO DO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
-        List<Individual> child = crossover.crossover(individuals.get(0), individuals.get(1));
+        // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
+        List<Individual> children = crossover.crossover(individuals.subList(0, 2));
 
-        // TO DO: create a way children will be (randomly) selected for mutation
-        Individual mutatedChild = mutation.mutate(child.get(0));
 
-        // TO DO: update population by adding the new individuals and remove (worst?) old ones
+        // TODO: create a way children will be (randomly) selected for mutation
+        Individual mutatedChild = mutation.mutate(children.get(0));
+
+        // TODO: update population by adding the new individuals and remove (worst?) old ones
     }
 
     public Individual getFittest() {
