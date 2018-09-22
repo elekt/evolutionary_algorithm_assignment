@@ -51,11 +51,11 @@ public class player2 implements ContestSubmission
 
 
         // init population
-        population = new Population(50, rnd);
+        population = new Population(10, rnd, evaluation);
         // calculate fitness
         while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents
-			double currentFitness = population.evaluatePopulation(evaluation);
+			double currentFitness = population.evaluatePopulation();
 
             try {
                 population.nextGeneration();

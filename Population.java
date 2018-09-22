@@ -5,13 +5,15 @@ import java.util.*;
 public class Population {
     private List<Individual> individuals;
     private int expectedPopulationSize;
+    private ContestEvaluation evaluation;
     private Random rnd;
     private Crossover crossover;
     private Mutation mutation;
     private Selection selection;
 
-    public Population(int _size, Random _rnd) {
+    public Population(int _size, Random _rnd, ContestEvaluation _evaluation) {
         expectedPopulationSize = _size;
+        evaluation = _evaluation;
         individuals = new ArrayList<>();
         rnd = _rnd;
 
@@ -24,14 +26,15 @@ public class Population {
         }
     }
 
-    public double evaluatePopulation(ContestEvaluation evaluation) {
+    public double evaluatePopulation() {
         double maxFitness = 0.0;
-
         for (Individual individual : individuals) {
             double fitness = (double) evaluation.evaluate(individual.getGenome());
             individual.setFitness(fitness);
-            if(fitness > maxFitness) {
+            if (fitness > maxFitness) {
                 maxFitness = fitness;
+            } else {
+                System.out.println("Individual is null");
             }
         }
         return maxFitness;
@@ -41,6 +44,7 @@ public class Population {
 
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
+        // TODO: fix the nullpointer exception caused by the extra evaluations
 
         // parent selection
         Collections.sort(individuals);
@@ -52,6 +56,9 @@ public class Population {
         individuals.addAll(children);
 
         mutation.mutateIndividuals(individuals, 0.2);
+
+        // before selection update fitness values
+        evaluatePopulation();
 
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
