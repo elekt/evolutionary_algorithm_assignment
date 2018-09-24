@@ -8,7 +8,7 @@ public class Population {
     private ContestEvaluation evaluation;
     private Random rnd;
     private Crossover crossover;
-    private Mutation mutation;
+    private Mutation[] mutations;
     private Selection selection;
     private int evals;
 
@@ -19,7 +19,8 @@ public class Population {
         rnd = _rnd;
 
         crossover = new SimpleCrossover();
-        mutation = new SimpleMutation(0.5, 0.02);
+        // TODO add new InversionMutation(0.2),
+        mutations = new Mutation[] { new SimpleMutation(0.3, 0.2), new SwapMutation(0.2, 2), new ScrambleMutation(0.2) };
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
@@ -29,6 +30,7 @@ public class Population {
     }
 
     public double evaluatePopulation() {
+
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
             double fitness = (double) evaluation.evaluate(individual.getGenome());
@@ -36,8 +38,6 @@ public class Population {
             individual.setFitness(fitness);
             if (fitness > maxFitness) {
                 maxFitness = fitness;
-            } else {
-                // System.out.println("Individual is null");
             }
         }
         return maxFitness;
@@ -58,11 +58,8 @@ public class Population {
         children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
 
-        if(individuals.contains(null)) {
-            System.out.println("Added null to individuals");
-        }
-
-        mutation.mutateIndividuals(individuals, 0.2);
+        // select random mutation
+        mutations[rnd.nextInt(mutations.length)].mutateIndividuals(individuals);
 
         // before selection update fitness values
         evaluatePopulation();

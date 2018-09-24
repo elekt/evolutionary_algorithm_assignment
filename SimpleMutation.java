@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleMutation implements Mutation {
+public class SimpleMutation extends BaseMutation{
 
     private double mutationProbability;
     private double mutationSpeed;
@@ -35,13 +35,6 @@ public class SimpleMutation implements Mutation {
 
                 individual.setGene(i, mutatedValue);
             }
-        }
-    }
-
-    @Override
-    public void mutateIndividuals(List<Individual> individuals, double individualMutationProbability) {
-        for(Individual individual : individuals) {
-            mutate(individual);
         }
     }
 }

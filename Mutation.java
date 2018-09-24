@@ -3,6 +3,6 @@ import java.util.List;
 public interface Mutation {
     void mutate(Individual individual);
 
-    void mutateIndividuals(List<Individual> individuals, double individualMutationProbability);
+    void mutateIndividuals(List<Individual> individuals);
 
 }
