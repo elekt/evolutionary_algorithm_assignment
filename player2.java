@@ -31,6 +31,8 @@ public class player2 implements ContestSubmission
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
+	evaluations_limit = 10000;
+	System.out.println(evaluations_limit);
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -44,14 +46,16 @@ public class player2 implements ContestSubmission
             // Do sth else
         }
     }
-
-    public void run()
+    
+	public void run()
 	{
+	    int evals = 0;
+
 
         // init population
         population = new Population(10, rnd, evaluation);
         // calculate fitness
-        while(population.getEvaluationCount() < evaluations_limit){
+        while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents
 			double currentFitness = population.evaluatePopulation();
 
@@ -62,7 +66,9 @@ public class player2 implements ContestSubmission
                 break;
             }
 
-            if(population.getEvaluationCount() % 50 == 0) {
+            evals += population.getPopulationSize();
+
+            if(evals % 50 == 0) {
                 System.out.print("Score: ");
                 System.out.println(currentFitness);
             }

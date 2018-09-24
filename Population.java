@@ -1,6 +1,7 @@
 import org.vu.contest.ContestEvaluation;
 
 import java.util.*;
+import java.lang.Math; 
 
 public class Population {
     private List<Individual> individuals;
@@ -10,7 +11,6 @@ public class Population {
     private Crossover crossover;
     private Mutation mutation;
     private Selection selection;
-    private int evals;
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation) {
         expectedPopulationSize = _size;
@@ -25,19 +25,17 @@ public class Population {
         for(int i = 0; i< expectedPopulationSize; ++i){
             individuals.add(new Individual(rnd));
         }
-        evals = 0;
     }
 
     public double evaluatePopulation() {
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
             double fitness = (double) evaluation.evaluate(individual.getGenome());
-            ++evals;
             individual.setFitness(fitness);
             if (fitness > maxFitness) {
                 maxFitness = fitness;
             } else {
-                // System.out.println("Individual is null");
+                //System.out.println("Individual is null");
             }
         }
         return maxFitness;
@@ -50,22 +48,62 @@ public class Population {
         // TODO: fix the nullpointer exception caused by the extra evaluations
 
         // parent selection
-        Collections.sort(individuals);
 
-        List<Individual> parents = individuals.subList(0, 2);
+
+        Collections.sort(individuals);
+	List<Individual> parents = new ArrayList<>();
+	//System.out.println(parents);
+	double populationProbability = 0.0;
+
+	for (Individual individual : individuals) {
+		populationProbability += individual.getFitness();
+	}
+	
+	List<Double> rand = new ArrayList<>();
+	for (int i = 0; i < 2; i++) { 
+		rand.add(Math.random() * populationProbability);
+	}
+	Collections.sort(rand);	
+ 
+	double p1 = rand.get(0);
+	double p2 = rand.get(1);
+	//System.out.println(p1);
+	//System.out.println(p2);
+
+	double cumulativeProbability = 0.0;
+
+	for (Individual individual : individuals) {
+		cumulativeProbability += individual.getFitness();
+		 if (p1 <= cumulativeProbability) {
+			parents.add(individual);
+			
+			break;
+    		} 
+	}
+	cumulativeProbability = 0.0;
+	for (Individual individual : individuals) {
+		cumulativeProbability += individual.getFitness();
+		if (p2 <= cumulativeProbability) {
+			parents.add(individual);
+			break;
+    		}
+	}
+	//System.out.println(parents);
+
+            
+		
+	
+
+        //List<Individual> parents = individuals.subList(0, 2);
         List<Individual> children = crossover.crossover(parents);
-        parents = individuals.subList(0, 2);
+        //parents = individuals.subList(0, 2);
         children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
-
-        if(individuals.contains(null)) {
-            System.out.println("Added null to individuals");
-        }
-
         mutation.mutateIndividuals(individuals, 0.2);
 
         // before selection update fitness values
         evaluatePopulation();
+	System.out.println(evaluatePopulation());
 
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
@@ -88,9 +126,5 @@ public class Population {
         }
 
         return ret;
-    }
-
-    public int getEvaluationCount() {
-        return evals;
     }
 }
