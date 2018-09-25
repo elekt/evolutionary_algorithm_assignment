@@ -8,38 +8,49 @@ public class Population {
     private ContestEvaluation evaluation;
     private Random rnd;
     private Crossover crossover;
-    private Mutation mutation;
+    private Mutation[] mutations;
     private Selection selection;
+    private int evals;
+    private int evalsLimit;
 
-    // Initializes population with size, random and kind of evaluation. It returns a population in with 10 individuals
-    // Each individual has the form of 6 characters.
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation) {
         expectedPopulationSize = _size;
         evaluation = _evaluation;
         individuals = new ArrayList<>();
         rnd = _rnd;
+        Properties props = evaluation.getProperties();
+        evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
+
 
         crossover = new SimpleCrossover();
-        mutation = new SimpleMutation(0.5, 0.02);
+        mutations = new Mutation[] {    new InversionMutation(0.8),
+                                        new SimpleMutation(0.5, 0.3),
+                                        new SwapMutation(0.2, 2),
+                                        new ScrambleMutation(0.2) };
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
-            individuals.add(new Individual(rnd));           
+            individuals.add(new Individual(rnd));
         }
-        
-        
+        evals = 0;
     }
 
     public double evaluatePopulation() {
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
-            double fitness = (double) evaluation.evaluate(individual.getGenome());
-            individual.setFitness(fitness);
-            if (fitness > maxFitness) {
-                maxFitness = fitness;
-            } //else {
-                // System.out.println("Individual is null");
-            // }
+            if(evals <= evalsLimit) {
+                if(individual.getFitness() < 0.0) {
+                    double fitness = (double) evaluation.evaluate(individual.getGenome());
+                    ++evals;
+                    individual.setFitness(fitness);
+                    if (fitness > maxFitness) {
+                        maxFitness = fitness;
+                    }
+                }
+            } else {
+                System.out.println("Run out eval cycles");
+                break;
+            }
         }
         return maxFitness;
     }
@@ -49,6 +60,9 @@ public class Population {
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
         // TODO: fix the nullpointer exception caused by the extra evaluations
+        // TODO do not double evaluate
+
+        evaluatePopulation();
 
         // parent selection
         Collections.sort(individuals);
@@ -59,7 +73,8 @@ public class Population {
         children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
 
-        mutation.mutateIndividuals(individuals, 0.2);
+        // select random mutation
+        mutations[rnd.nextInt(mutations.length)].mutateIndividuals(individuals);
 
         // before selection update fitness values
         evaluatePopulation();
@@ -85,5 +100,9 @@ public class Population {
         }
 
         return ret;
+    }
+
+    public int getEvaluationCount() {
+        return evals;
     }
 }

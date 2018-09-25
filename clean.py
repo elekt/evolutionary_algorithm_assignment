@@ -9,3 +9,4 @@ for item in files:
             os.remove(os.path.join(os.getcwd(), item))
         if item == "submission.jar":
             os.remove(os.path.join(os.getcwd(), item))
+
