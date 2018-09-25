@@ -13,7 +13,7 @@ public class SimpleSelection implements Selection {
 	
 	
         Collections.sort(individuals);
-
+	
         individuals = individuals.subList(0, populationSize);
 
         return individuals;

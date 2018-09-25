@@ -31,7 +31,7 @@ public class player2 implements ContestSubmission
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
-	evaluations_limit = 10000;
+	evaluations_limit = 2000;
 	System.out.println(evaluations_limit);
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
@@ -50,10 +50,11 @@ public class player2 implements ContestSubmission
 	public void run()
 	{
 	    int evals = 0;
+	    int generation = 0;
 
 
         // init population
-        population = new Population(10, rnd, evaluation);
+        population = new Population(50, rnd, evaluation);
         // calculate fitness
         while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents
@@ -67,10 +68,14 @@ public class player2 implements ContestSubmission
             }
 
             evals += population.getPopulationSize();
+	    generation += 1;
+
 
             if(evals % 50 == 0) {
                 System.out.print("Score: ");
                 System.out.println(currentFitness);
+		System.out.print("Generation: ");
+		System.out.println(generation);
             }
 
         }

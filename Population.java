@@ -54,50 +54,43 @@ public class Population {
 	List<Individual> parents = new ArrayList<>();
 	//System.out.println(parents);
 	double populationProbability = 0.0;
-
+	//System.out.println("Individual fitness");
 	for (Individual individual : individuals) {
+		//System.out.println(individual.getFitness());
 		populationProbability += individual.getFitness();
 	}
 	
-	List<Double> rand = new ArrayList<>();
-	for (int i = 0; i < 2; i++) { 
-		rand.add(Math.random() * populationProbability);
-	}
-	Collections.sort(rand);	
- 
-	double p1 = rand.get(0);
-	double p2 = rand.get(1);
-	//System.out.println(p1);
-	//System.out.println(p2);
 
+	double p1 = Math.random() * populationProbability;
+	double p2 = populationProbability;
 	double cumulativeProbability = 0.0;
 
 	for (Individual individual : individuals) {
 		cumulativeProbability += individual.getFitness();
 		 if (p1 <= cumulativeProbability) {
 			parents.add(individual);
-			
-			break;
-    		} 
-	}
-	cumulativeProbability = 0.0;
-	for (Individual individual : individuals) {
-		cumulativeProbability += individual.getFitness();
+			p2 = p1 + (1/expectedPopulationSize * populationProbability);
+		} 
 		if (p2 <= cumulativeProbability) {
 			parents.add(individual);
 			break;
-    		}
+			
+    		} 
 	}
-	//System.out.println(parents);
-
-            
-		
 	
 
+            
+	// Repeated crossover, adding half the population from 2 parents
+	List<Individual> children = crossover.crossover(parents);
+	int crossover_amount = Math.round(expectedPopulationSize/4);	
+	for (int i = 0; i < crossover_amount; i++) { 
+		children.addAll(crossover.crossover(parents));
+	} 
+
         //List<Individual> parents = individuals.subList(0, 2);
-        List<Individual> children = crossover.crossover(parents);
+        //List<Individual> children = crossover.crossover(parents);
         //parents = individuals.subList(0, 2);
-        children.addAll(crossover.crossover(parents));
+        //children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
         mutation.mutateIndividuals(individuals, 0.2);
 
