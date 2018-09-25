@@ -59,8 +59,6 @@ public class Population {
 
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
-        // TODO: fix the nullpointer exception caused by the extra evaluations
-        // TODO do not double evaluate
 
         evaluatePopulation();
 
@@ -81,6 +79,7 @@ public class Population {
 
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
+
     }
 
     public Individual getFittest() {
