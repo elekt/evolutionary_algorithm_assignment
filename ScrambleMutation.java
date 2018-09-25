@@ -22,7 +22,7 @@ public class ScrambleMutation extends BaseMutation {
         boolean isMutating = rnd.nextDouble() > mutationProbability;
 
         if(isMutating) {
-
+            System.out.println("ScrambleMutation");
             List<Integer> order = new ArrayList<>();
             for (int i = 0; i < individual.getGenome().length; i++) {
                 order.add(i);
@@ -38,6 +38,5 @@ public class ScrambleMutation extends BaseMutation {
                 individual.setGene(swapIndex, c);
             }
         }
-
     }
 }

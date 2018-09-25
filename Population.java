@@ -19,8 +19,10 @@ public class Population {
         rnd = _rnd;
 
         crossover = new SimpleCrossover();
-        // TODO add new InversionMutation(0.2),
-        mutations = new Mutation[] { new SimpleMutation(0.3, 0.2), new SwapMutation(0.2, 2), new ScrambleMutation(0.2) };
+        mutations = new Mutation[] {    new InversionMutation(0.8),
+                                        new SimpleMutation(0.5, 0.05),
+                                        new SwapMutation(0.2, 2),
+                                        new ScrambleMutation(0.2) };
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){

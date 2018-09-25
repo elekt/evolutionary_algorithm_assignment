@@ -26,6 +26,7 @@ public class SimpleMutation extends BaseMutation{
             boolean isMutating = rnd.nextDouble() > mutationProbability;
 
             if(isMutating) {
+                System.out.println("SimpleMutation");
                 double minValue = individual.getMinValue();
                 double maxValue = individual.getMaxValue();
                 double valueRange = maxValue - minValue;

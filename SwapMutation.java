@@ -22,11 +22,11 @@ public class SwapMutation extends BaseMutation {
         boolean isMutating = rnd.nextDouble() > mutationProbability;
 
         if(isMutating) {
-            for(int i = 0; i < individual.getGenome().length; ++i) {
+            System.out.println("SwapMutation");
+            for(int i = 0; i < numberOfSwaps; ++i) {
                 int swapIndex1 = rnd.nextInt(individual.getGenome().length);
                 int swapIndex2 = rnd.nextInt(individual.getGenome().length);
                 double c = individual.getGene(swapIndex1);
-
                 individual.setGene(swapIndex1, individual.getGene(swapIndex2));
                 individual.setGene(swapIndex2, c);
             }

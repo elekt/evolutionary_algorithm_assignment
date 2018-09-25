@@ -24,30 +24,28 @@ public class InversionMutation extends BaseMutation {
         boolean isMutating = rnd.nextDouble() > mutationProbability;
 
         if(isMutating) {
-            for(int i = 0; i < individual.getGenome().length; ++i) {
-                int temp1 = rnd.nextInt(individual.getGenome().length);
-                int temp2 = rnd.nextInt(individual.getGenome().length);
+            System.out.println("InversionMutation");
+            System.out.println(Arrays.toString(individual.getGenome()));
 
-                int inverseRange1 = (temp1>temp2)? temp1:temp2;
-                int inverseRange2 = (temp1>temp2)? temp2:temp1;
+            int temp1 = rnd.nextInt(individual.getGenome().length - 4);
+            int temp2 = 4 + rnd.nextInt(individual.getGenome().length - 4);
 
-                double[] unboxedGenome = Arrays.copyOfRange(individual.getGenome(), inverseRange1, inverseRange2);
-                Double[] boxedGenome = new Double[unboxedGenome.length];
+            int inverseRange1 = (temp1>temp2) ? temp2 : temp1;
+            int inverseRange2 = (temp1>temp2) ? temp1 : temp2;
 
-                for(int j = 0; i<unboxedGenome.length; ++i) {
-                    boxedGenome[j] = new Double(unboxedGenome[j]);
-                }
+            double[] unboxedGenome = Arrays.copyOfRange(individual.getGenome(), inverseRange1, inverseRange2);
+            Double[] boxedGenome = new Double[unboxedGenome.length];
 
-                List<Double> inverseList = Arrays.asList(boxedGenome);
-                Collections.reverse(inverseList);
+            for(int j = 0; j<unboxedGenome.length; ++j) {
+                boxedGenome[j] = unboxedGenome[j];
+            }
 
-                System.out.println(individual.getGenome().toString());
+            List<Double> inverseList = Arrays.asList(boxedGenome);
+            Collections.reverse(inverseList);
 
-                for(int j = inverseRange1; j < inverseRange2; ++j) {
-                    individual.setGene(j, inverseList.get(j));
-                }
-                System.out.println(individual.getGenome().toString());
 
+            for(int j = inverseRange1; j < inverseRange2; ++j) {
+                individual.setGene(j, inverseList.get(j - inverseRange1));
             }
         }
 
