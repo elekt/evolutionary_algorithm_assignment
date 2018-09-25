@@ -39,11 +39,13 @@ public class Population {
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
             if(evals <= evalsLimit) {
-                double fitness = (double) evaluation.evaluate(individual.getGenome());
-                ++evals;
-                individual.setFitness(fitness);
-                if (fitness > maxFitness) {
-                    maxFitness = fitness;
+                if(individual.getFitness() < 0.0) {
+                    double fitness = (double) evaluation.evaluate(individual.getGenome());
+                    ++evals;
+                    individual.setFitness(fitness);
+                    if (fitness > maxFitness) {
+                        maxFitness = fitness;
+                    }
                 }
             } else {
                 System.out.println("Run out eval cycles");

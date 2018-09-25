@@ -3,7 +3,6 @@ import java.util.*;
 public class ScrambleMutation extends BaseMutation {
 
     private double mutationProbability;
-    private double mutationSpeed;
     private Random rnd;
 
 

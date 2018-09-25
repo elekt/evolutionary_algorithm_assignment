@@ -49,7 +49,7 @@ public class player2 implements ContestSubmission
 	{
 
         // init population
-        population = new Population(10, rnd, evaluation);
+        population = new Population(20, rnd, evaluation);
         // calculate fitness
         while(population.getEvaluationCount() < evaluations_limit){
 
@@ -60,7 +60,7 @@ public class player2 implements ContestSubmission
                 break;
             }
 
-            if(population.getEvaluationCount() % 1000 == 0) {
+            if(population.getEvaluationCount() % 1 == 0) {
                 System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
             }
 
