@@ -11,6 +11,8 @@ public class Population {
     private Mutation mutation;
     private Selection selection;
 
+    // Initializes population with size, random and kind of evaluation. It returns a population in with 10 individuals
+    // Each individual has the form of 6 characters.
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation) {
         expectedPopulationSize = _size;
         evaluation = _evaluation;
@@ -22,8 +24,10 @@ public class Population {
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
-            individuals.add(new Individual(rnd));
+            individuals.add(new Individual(rnd));           
         }
+        
+        
     }
 
     public double evaluatePopulation() {
@@ -33,9 +37,9 @@ public class Population {
             individual.setFitness(fitness);
             if (fitness > maxFitness) {
                 maxFitness = fitness;
-            } else {
-                System.out.println("Individual is null");
-            }
+            } //else {
+                // System.out.println("Individual is null");
+            // }
         }
         return maxFitness;
     }

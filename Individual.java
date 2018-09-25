@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.*;
 
 public class Individual implements Comparable<Individual>{
 
@@ -21,6 +22,8 @@ public class Individual implements Comparable<Individual>{
     }
 
     public double[] getGenome() {
+       	//System.out.print("genome");
+        //System.out.println(Arrays.toString(genome)); 
         return genome;
     }
 
@@ -37,6 +40,7 @@ public class Individual implements Comparable<Individual>{
         } else {
             genome[i] = value;
         }
+        
     }
 
     public double getGene(int i) {
