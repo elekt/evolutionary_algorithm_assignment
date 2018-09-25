@@ -20,7 +20,7 @@ public class Population {
 
         crossover = new SimpleCrossover();
         mutations = new Mutation[] {    new InversionMutation(0.8),
-                                        new SimpleMutation(0.5, 0.05),
+                                        new SimpleMutation(0.5, 0.3),
                                         new SwapMutation(0.2, 2),
                                         new ScrambleMutation(0.2) };
         selection = new SimpleSelection();

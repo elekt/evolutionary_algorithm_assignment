@@ -27,13 +27,12 @@ public class SimpleMutation extends BaseMutation{
 
             if(isMutating) {
                 System.out.println("SimpleMutation");
-                double minValue = individual.getMinValue();
-                double maxValue = individual.getMaxValue();
-                double valueRange = maxValue - minValue;
-                double mutationValue = valueRange * mutationSpeed * (minValue + valueRange*rnd.nextDouble());
+                double mutationValue = mutationSpeed * rnd.nextDouble();
                 double currentValue = individual.getGene(i);
-                double mutatedValue = currentValue + mutationValue;
+                boolean isAdding = rnd.nextDouble()>0.5;
+                double mutatedValue = isAdding ? currentValue + mutationValue : currentValue - mutationValue;
 
+                System.out.println(String.format("Mutation value: %f", mutationValue));
                 individual.setGene(i, mutatedValue);
             }
         }
