@@ -24,9 +24,6 @@ public class InversionMutation extends BaseMutation {
         boolean isMutating = rnd.nextDouble() > mutationProbability;
 
         if(isMutating) {
-            System.out.println("InversionMutation");
-            System.out.println(Arrays.toString(individual.getGenome()));
-
             int temp1 = rnd.nextInt(individual.getGenome().length - 4);
             int temp2 = 4 + rnd.nextInt(individual.getGenome().length - 4);
 

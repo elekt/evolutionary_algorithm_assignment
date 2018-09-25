@@ -11,12 +11,16 @@ public class Population {
     private Mutation[] mutations;
     private Selection selection;
     private int evals;
+    private int evalsLimit;
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation) {
         expectedPopulationSize = _size;
         evaluation = _evaluation;
         individuals = new ArrayList<>();
         rnd = _rnd;
+        Properties props = evaluation.getProperties();
+        evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
+
 
         crossover = new SimpleCrossover();
         mutations = new Mutation[] {    new InversionMutation(0.8),
@@ -32,14 +36,18 @@ public class Population {
     }
 
     public double evaluatePopulation() {
-
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
-            double fitness = (double) evaluation.evaluate(individual.getGenome());
-            ++evals;
-            individual.setFitness(fitness);
-            if (fitness > maxFitness) {
-                maxFitness = fitness;
+            if(evals <= evalsLimit) {
+                double fitness = (double) evaluation.evaluate(individual.getGenome());
+                ++evals;
+                individual.setFitness(fitness);
+                if (fitness > maxFitness) {
+                    maxFitness = fitness;
+                }
+            } else {
+                System.out.println("Run out eval cycles");
+                break;
             }
         }
         return maxFitness;
@@ -50,6 +58,9 @@ public class Population {
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
         // TODO: fix the nullpointer exception caused by the extra evaluations
+        // TODO do not double evaluate
+
+        evaluatePopulation();
 
         // parent selection
         Collections.sort(individuals);

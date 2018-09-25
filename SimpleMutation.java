@@ -26,13 +26,11 @@ public class SimpleMutation extends BaseMutation{
             boolean isMutating = rnd.nextDouble() > mutationProbability;
 
             if(isMutating) {
-                System.out.println("SimpleMutation");
                 double mutationValue = mutationSpeed * rnd.nextDouble();
                 double currentValue = individual.getGene(i);
                 boolean isAdding = rnd.nextDouble()>0.5;
                 double mutatedValue = isAdding ? currentValue + mutationValue : currentValue - mutationValue;
 
-                System.out.println(String.format("Mutation value: %f", mutationValue));
                 individual.setGene(i, mutatedValue);
             }
         }

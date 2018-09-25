@@ -22,7 +22,6 @@ public class SwapMutation extends BaseMutation {
         boolean isMutating = rnd.nextDouble() > mutationProbability;
 
         if(isMutating) {
-            System.out.println("SwapMutation");
             for(int i = 0; i < numberOfSwaps; ++i) {
                 int swapIndex1 = rnd.nextInt(individual.getGenome().length);
                 int swapIndex2 = rnd.nextInt(individual.getGenome().length);
