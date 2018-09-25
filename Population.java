@@ -19,7 +19,7 @@ public class Population {
         rnd = _rnd;
 
         crossover = new SimpleCrossover();
-        mutation = new SimpleMutation(0.5, 0.02);
+        mutation = new SimpleMutation(0.0, 0.0);
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
@@ -60,10 +60,11 @@ public class Population {
 		populationProbability += individual.getFitness();
 	}
 	
-
-	double p1 = Math.random() * populationProbability;
+	double MatingPool = 2
+	double p1 = Math.random() * populationProbability/MatingPool;
 	double p2 = populationProbability;
 	double cumulativeProbability = 0.0;
+	
 
 	for (Individual individual : individuals) {
 		cumulativeProbability += individual.getFitness();
@@ -92,7 +93,7 @@ public class Population {
         //parents = individuals.subList(0, 2);
         //children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
-        mutation.mutateIndividuals(individuals, 0.2);
+        mutation.mutateIndividuals(individuals, 0.0);
 
         // before selection update fitness values
         evaluatePopulation();
