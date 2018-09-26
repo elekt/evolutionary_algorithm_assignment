@@ -54,7 +54,7 @@ public class player2 implements ContestSubmission
 
 
         // init population
-        population = new Population(50, rnd, evaluation);
+        population = new Population(20, rnd, evaluation);
         // calculate fitness
         while(population.getFittest().getFitness() >= 9.0 || evals < evaluations_limit){
             // Select parents

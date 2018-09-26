@@ -19,8 +19,9 @@ public class Population {
         rnd = _rnd;
 
         crossover = new SimpleCrossover();
-        mutation = new SimpleMutation(0.0, 0.0);
+        mutation = new SimpleMutation(0.5, 0.02);
         selection = new SimpleSelection();
+	selection = new RoundRobinSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
             individuals.add(new Individual(rnd));
@@ -60,7 +61,7 @@ public class Population {
 		populationProbability += individual.getFitness();
 	}
 	
-	double MatingPool = 2
+	double MatingPool = 2;
 	double p1 = Math.random() * populationProbability/MatingPool;
 	double p2 = populationProbability;
 	double cumulativeProbability = 0.0;
