@@ -30,7 +30,7 @@ public class Population {
                                         new SimpleMutation(0.6, 0.5),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
-        selection = new SimpleSelection();
+        //selection = new SimpleSelection();
 	selection = new RoundRobinSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
@@ -42,14 +42,6 @@ public class Population {
     public double evaluatePopulation() {
         double maxFitness = 0.0;
         for (Individual individual : individuals) {
-            ++evals;
-            double fitness = (double) evaluation.evaluate(individual.getGenome());
-            individual.setFitness(fitness);
-            if (fitness > maxFitness) {
-                maxFitness = fitness;
-            } else {
-                //System.out.println("Individual is null");
-
             if(evals <= evalsLimit) {
                 if(individual.getFitness() < 0.0) {
                     double fitness = (double) evaluation.evaluate(individual.getGenome());
@@ -62,7 +54,6 @@ public class Population {
             } else {
                 System.out.println("Run out eval cycles");
                 break;
-
             }
         }
         return maxFitness;
@@ -82,28 +73,22 @@ public class Population {
         List<Individual> children = crossover.crossover(parents);
         parents = individuals.subList(0, 2);
         children.addAll(crossover.crossover(parents));
-        individuals.addAll(children);
-   
-        if(individuals.contains(null)) {		
-             System.out.println("Added null to individuals");		
-        }
+        
 
         // select random mutation
-        mutations[rnd.nextInt(mutations.length)].mutateIndividuals(individuals);
-
-
+        mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
+	individuals.addAll(children);
         // before selection update fitness values
         evaluatePopulation();
-	System.out.println(evaluatePopulation());
 
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
 
-        System.out.println("After selection");
-        for(Double d : getFitnessList()) {
-            System.out.print(String.format("%.4f ", d));
-        }
-        System.out.println();
+        //System.out.println("After selection");
+        //for(Double d : getFitnessList()) {
+            //System.out.print(String.format("%.4f ", d));
+        //}
+        //System.out.println();
 
     }
 
