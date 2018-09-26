@@ -1,0 +1,31 @@
+// parent selection
+	Collections.sort(individuals);
+	List<Individual> parents = new ArrayList<>();
+	//System.out.println(parents);
+	double populationProbability = 0.0;
+	//System.out.println("Individual fitness");
+	for (Individual individual : individuals) {
+		//System.out.println(individual.getFitness());
+		populationProbability += individual.getFitness();
+	}
+	
+	double MatingPool = 3;
+	double p1 = Math.random() * populationProbability/MatingPool;
+	double p2;
+	double cumulativeProbability = 0.0;
+	
+
+	for (Individual individual : individuals) {
+		cumulativeProbability += individual.getFitness();
+		
+		 if (p1 <= cumulativeProbability) {
+			parents.add(individual);
+			p2 = p1 + (1/expectedPopulationSize * populationProbability);
+		} 
+		if (p2 <= cumulativeProbability) {
+			parents.add(individual);
+			break;
+			
+    		} 
+	}
+	
