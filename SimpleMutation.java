@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleMutation implements Mutation {
+public class SimpleMutation extends BaseMutation{
 
     private double mutationProbability;
     private double mutationSpeed;
@@ -26,22 +26,13 @@ public class SimpleMutation implements Mutation {
             boolean isMutating = rnd.nextDouble() > mutationProbability;
 
             if(isMutating) {
-                double minValue = individual.getMinValue();
-                double maxValue = individual.getMaxValue();
-                double valueRange = maxValue - minValue;
-                double mutationValue = valueRange * mutationSpeed * (minValue + valueRange*rnd.nextDouble());
+                double mutationValue = mutationSpeed * rnd.nextDouble();
                 double currentValue = individual.getGene(i);
-                double mutatedValue = currentValue + mutationValue;
+                boolean isAdding = rnd.nextDouble()>0.5;
+                double mutatedValue = isAdding ? currentValue + mutationValue : currentValue - mutationValue;
 
                 individual.setGene(i, mutatedValue);
             }
-        }
-    }
-
-    @Override
-    public void mutateIndividuals(List<Individual> individuals, double individualMutationProbability) {
-        for(Individual individual : individuals) {
-            mutate(individual);
         }
     }
 }

@@ -4,7 +4,7 @@ public class Individual implements Comparable<Individual>{
 
 
     private double[] genome;
-    private Double fitness = 0.0;
+    private Double fitness = -1.0;
     private double maxValue = 5;
     private double minValue = -5;
     private int dimensions = 10;
@@ -38,6 +38,9 @@ public class Individual implements Comparable<Individual>{
         } else {
             genome[i] = value;
         }
+
+        // since it changed the fitness is invalid
+        fitness = -1.0;
     }
 
     public double getGene(int i) {
