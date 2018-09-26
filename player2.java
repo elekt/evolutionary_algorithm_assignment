@@ -49,7 +49,7 @@ public class player2 implements ContestSubmission
 	{
 
         // init population
-        population = new Population(20, rnd, evaluation);
+        population = new Population(10, rnd, evaluation);
         // calculate fitness
         while(population.getEvaluationCount() < evaluations_limit){
 

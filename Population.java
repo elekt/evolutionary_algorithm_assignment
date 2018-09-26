@@ -1,5 +1,7 @@
 import org.vu.contest.ContestEvaluation;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class Population {
@@ -23,10 +25,10 @@ public class Population {
 
 
         crossover = new SimpleCrossover();
-        mutations = new Mutation[] {    new InversionMutation(0.8),
-                                        new SimpleMutation(0.5, 0.3),
-                                        new SwapMutation(0.2, 2),
-                                        new ScrambleMutation(0.2) };
+        mutations = new Mutation[] {    new InversionMutation(0.6),
+                                        new SimpleMutation(0.6, 0.5),
+                                        new SwapMutation(0.6, 2),
+                                        new ScrambleMutation(0.6) };
         selection = new SimpleSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
@@ -79,6 +81,12 @@ public class Population {
 
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
+
+        System.out.println("After selection");
+        for(Double d : getFitnessList()) {
+            System.out.print(String.format("%.4f ", d));
+        }
+        System.out.println();
 
     }
 
