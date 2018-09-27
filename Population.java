@@ -62,8 +62,6 @@ public class Population {
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
-        evaluatePopulation();
-
         // parent selection
         Collections.sort(individuals);
 
