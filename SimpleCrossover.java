@@ -11,16 +11,16 @@ public class SimpleCrossover implements Crossover {
         
         double[] child1 = new double[10];
         double[] child2 = new double[10];
-        
-        // BLEND CROSSOVER
-        Random r = new Random();
-        double alpha =  Math.random()- 0.5; 
-        	
-        for (int i = 0; i < 10; i++) {
-            child1[i] = (alpha * (parents.get(0).getGenome()[i])) + ((1-alpha)*(parents.get(1).getGenome()[i]));
-            child2[i] = (alpha * (parents.get(1).getGenome()[i])) + ((1-alpha)*(parents.get(0).getGenome()[i]));
-            }
-//        
+//
+//        // BLEND CROSSOVER
+//        Random r = new Random();
+//        double alpha =  Math.random()- 0.5;
+//
+//        for (int i = 0; i < 10; i++) {
+//            child1[i] = (alpha * (parents.get(0).getGenome()[i])) + ((1-alpha)*(parents.get(1).getGenome()[i]));
+//            child2[i] = (alpha * (parents.get(1).getGenome()[i])) + ((1-alpha)*(parents.get(0).getGenome()[i]));
+//            }
+////
 //        
 //        // UNIFORM CROSSOVER
 //        for (int i = 0; i < 10; i++) {
@@ -78,17 +78,17 @@ public class SimpleCrossover implements Crossover {
 //      }
         
         
-//        \\ 1 POINT Crossover, Not random. at 5/5
-//        for (int i = 0; i < 10; i++) {
-//            if(i<=4) {
-//                child1[i] = (parents.get(0).getGenome()[i]);
-//                child2[i] = (parents.get(1).getGenome()[i]);
-//               
-//            } else {
-//                child1[i] = (parents.get(1).getGenome()[i]);
-//                child2[i] = (parents.get(0).getGenome()[i]);
-//            }
-//        }
+       // 1 POINT Crossover, Not random. at 5/5
+        for (int i = 0; i < 10; i++) {
+            if(i<=4) {
+                child1[i] = (parents.get(0).getGenome()[i]);
+                child2[i] = (parents.get(1).getGenome()[i]);
+
+            } else {
+                child1[i] = (parents.get(1).getGenome()[i]);
+                child2[i] = (parents.get(0).getGenome()[i]);
+            }
+        }
 
         List<Individual> ret = new ArrayList<>();
         ret.add(new Individual(child1));
