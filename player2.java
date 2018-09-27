@@ -31,7 +31,9 @@ public class player2 implements ContestSubmission
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
-	//evaluations_limit = 2000;
+
+        //evaluations_limit = 1000;
+
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
