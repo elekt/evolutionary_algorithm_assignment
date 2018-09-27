@@ -23,8 +23,9 @@ public class Population {
         Properties props = evaluation.getProperties();
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
+        // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
+        crossover = new SimpleCrossover(); // OnePoint is default
 
-        crossover = new SimpleCrossover();
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.6, 0.5),
                                         new SwapMutation(0.6, 2),
