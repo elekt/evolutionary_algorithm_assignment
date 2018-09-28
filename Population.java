@@ -74,7 +74,7 @@ public class Population {
 
         List<Individual> parents = individuals.subList(0, 2);
         List<Individual> children = crossover.crossover(parents);
-        parents = individuals.subList(0, 2);
+        parents = individuals.subList(2, 4);
         children.addAll(crossover.crossover(parents));
         individuals.addAll(children);
 
