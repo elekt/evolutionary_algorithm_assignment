@@ -30,13 +30,13 @@ public class UniformParentSelection implements Selection {
             matingPool.add(individuals.get(rnd.nextInt(individuals.size())));
             currentMember++;
         }
-
-        System.out.println("______________MATING POOL");
-        for (int i = 0; i < matingPoolSize; i++) {
-            System.out.println(matingPool.get(i).getFitness());
-
-        }
-        System.out.println("\n");
+//
+//        System.out.println("______________MATING POOL");
+//        for (int i = 0; i < matingPoolSize; i++) {
+//            System.out.println(matingPool.get(i).getFitness());
+//
+//        }
+//        System.out.println("\n");
 
         return matingPool;
 
