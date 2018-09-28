@@ -31,7 +31,9 @@ public class player2 implements ContestSubmission
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
-        evaluations_limit = 1000;
+
+        //evaluations_limit = 1000;
+
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -45,14 +47,21 @@ public class player2 implements ContestSubmission
             // Do sth else
         }
     }
-
-    public void run()
+    
+	public void run()
 	{
+	    int generation = 0;
+
 
         // init population
         population = new Population(10, rnd, evaluation);
         // calculate fitness
+
         while(population.getEvaluationCount() < evaluations_limit){
+            // Select parents
+			double currentFitness = population.evaluatePopulation();
+
+      
 
             try {
                 population.nextGeneration();
@@ -60,9 +69,18 @@ public class player2 implements ContestSubmission
                 System.out.println(e.getMessage());
                 break;
             }
+	    generation += 1;
+	    System.out.print("Score: ");
+                System.out.println(population.evaluatePopulation());
+		System.out.print("Generation: ");
+		System.out.println(generation);
 
-            if(population.getEvaluationCount() % 1 == 0) {
-                System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+
+            if(population.getEvaluationCount() % 50 == 0) {
+		
+                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+		System.out.print("Score: ");
+                System.out.println(currentFitness);
             }
 
         }

@@ -10,9 +10,10 @@ public class SimpleSelection implements Selection {
             System.out.println("WARNING: Expected population size is bigger than the current population in selection!");
             return individuals;
         }
-
+	
+	
         Collections.sort(individuals);
-
+	
         individuals = individuals.subList(0, populationSize);
 
         return individuals;

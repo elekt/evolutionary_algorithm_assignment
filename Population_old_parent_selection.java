@@ -1,5 +1,7 @@
 import org.vu.contest.ContestEvaluation;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.lang.Math; 
 
@@ -10,8 +12,7 @@ public class Population {
     private Random rnd;
     private Crossover crossover;
     private Mutation[] mutations;
-    private Selection[] parentSelection;
-    private Selection[] survivorSelection;
+    private Selection selection;
     private int evals;
     private int evalsLimit;
 
@@ -23,19 +24,14 @@ public class Population {
         Properties props = evaluation.getProperties();
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
-        // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
-        crossover = new SimpleCrossover(); // OnePoint is default
 
+        crossover = new SimpleCrossover();
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.6, 0.5),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
-
-        parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
-                                            new TournamentSelection(2, 4),
-                                            new UniformParentSelection(2)};
-        survivorSelection = new Selection[] {    new RoundRobinSelection()};
-
+        //selection = new SimpleSelection();
+	selection = new RoundRobinSelection();
 
         for(int i = 0; i< expectedPopulationSize; ++i){
             individuals.add(new Individual(rnd));
@@ -70,15 +66,53 @@ public class Population {
 
         evaluatePopulation();
 
-        parentSelection[3].selectIndividuals(individuals, expectedPopulationSize);
-
         // parent selection
-        Collections.sort(individuals);
+	Collections.sort(individuals);
+	List<Individual> parents = new ArrayList<>();
+	//System.out.println(parents);
+	double populationProbability = 0.0;
+	//System.out.println("Individual fitness");
+	for (Individual individual : individuals) {
+		//System.out.println(individual.getFitness());
+		populationProbability += individual.getFitness();
+	}
+	
+	double MatingPool = 3;
+	double p1 = Math.random() * populationProbability/MatingPool;
+	double p2;
+	double cumulativeProbability = 0.0;
+	
 
-        List<Individual> parents = individuals.subList(0, 2);
-        List<Individual> children = crossover.crossover(parents);
-        parents = individuals.subList(0, 2);
-        children.addAll(crossover.crossover(parents));
+	for (Individual individual : individuals) {
+		cumulativeProbability += individual.getFitness();
+		
+		 if (p1 <= cumulativeProbability) {
+			parents.add(individual);
+			p2 = p1 + (1/expectedPopulationSize * populationProbability);
+		} 
+		if (p2 <= cumulativeProbability) {
+			parents.add(individual);
+			break;
+			
+    		} 
+	}
+	
+
+            
+	// Repeated crossover, adding half the population from 2 parents
+	//List<Individual> children = crossover.crossover(parents);
+	//int crossover_amount = Math.round(expectedPopulationSize/4);	
+	//for (int i = 0; i < crossover_amount; i++) { 
+	//	children.addAll(crossover.crossover(parents));
+	//} 
+
+	// Old way
+        //Collections.sort(individuals);
+
+        //List<Individual> parents = individuals.subList(0, 2);
+        //List<Individual> children = crossover.crossover(parents);
+        //parents = individuals.subList(0, 2);
+        //children.addAll(crossover.crossover(parents));
         
 
         // select random mutation
@@ -87,14 +121,14 @@ public class Population {
         // before selection update fitness values
         evaluatePopulation();
 
-        // survivor selection
-        individuals = survivorSelection[0].selectIndividuals(individuals, expectedPopulationSize);
+        // selection
+        individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
 
         //System.out.println("After selection");
         //for(Double d : getFitnessList()) {
             //System.out.print(String.format("%.4f ", d));
         //}
-        //System.out.println();
+	
 
     }
 
