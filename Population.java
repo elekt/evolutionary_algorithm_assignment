@@ -24,7 +24,7 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
-        crossover = new SimpleCrossover(); // OnePoint is default
+        crossover = new OnePointCrossover(); // OnePoint is default
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.6, 0.5),
@@ -70,14 +70,14 @@ public class Population {
 
         evaluatePopulation();
 
-        parentSelection[3].selectIndividuals(individuals, expectedPopulationSize);
+        parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
 
         // parent selection
         Collections.sort(individuals);
 
         List<Individual> parents = individuals.subList(0, 2);
         List<Individual> children = crossover.crossover(parents);
-        parents = individuals.subList(0, 2);
+        parents = individuals.subList(2, 4);
         children.addAll(crossover.crossover(parents));
         
 

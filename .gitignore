@@ -10,6 +10,7 @@ assignmentfiles_2017.iml
 tmp/
 
 submission.jar
+contest.jar
 
 # BlueJ files
 *.ctxt
