@@ -67,7 +67,7 @@ public class Population {
 
         evaluatePopulation();
 
-        parentSelection[3].selectIndividuals(individuals, expectedPopulationSize);
+        parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
 
         // parent selection
         Collections.sort(individuals);
