@@ -1,7 +1,5 @@
 import org.vu.contest.ContestEvaluation;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 public class Population {
@@ -11,7 +9,8 @@ public class Population {
     private Random rnd;
     private Crossover crossover;
     private Mutation[] mutations;
-    private Selection selection;
+    private Selection[] parentSelection;
+    private Selection[] survivorSelection;
     private int evals;
     private int evalsLimit;
 
@@ -24,13 +23,16 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
-        crossover = new SimpleCrossover(); // OnePoint is default
+        crossover = new OnePointCrossover(); // OnePoint is default
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.6, 0.5),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
-        selection = new SimpleSelection();
+        parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
+                                            new TournamentSelection(2, 4),
+                                            new UniformParentSelection(2)};
+        survivorSelection = new Selection[] {    new SimpleSelection()};
 
         for(int i = 0; i< expectedPopulationSize; ++i){
             individuals.add(new Individual(rnd));
@@ -63,6 +65,10 @@ public class Population {
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
+        evaluatePopulation();
+
+        parentSelection[3].selectIndividuals(individuals, expectedPopulationSize);
+
         // parent selection
         Collections.sort(individuals);
 
@@ -78,8 +84,8 @@ public class Population {
         // before selection update fitness values
         evaluatePopulation();
 
-        // selection
-        individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
+        // survivor selection
+        individuals = survivorSelection[0].selectIndividuals(individuals, expectedPopulationSize);
 
         System.out.println("After selection");
         for(Double d : getFitnessList()) {
