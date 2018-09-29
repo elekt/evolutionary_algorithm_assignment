@@ -54,16 +54,16 @@ public class player2 implements ContestSubmission
         // calculate fitness
         while(population.getEvaluationCount() < evaluations_limit){
 
-            try {
-                population.nextGeneration();
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                break;
-            }
+//            try {
+//                population.nextGeneration();
+//            } catch (IllegalArgumentException e) {
+//                System.out.println(e.getMessage());
+//                break;
+//            }
 
-            if(population.getEvaluationCount() % 1 == 0) {
-                System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-            }
+//            if(population.getEvaluationCount() % 1 == 0) {
+//                System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+//            }
 
         }
         System.out.print("Best ");
