@@ -8,6 +8,7 @@ public class SimpleCrossover implements Crossover {
         if(parents.size() != 2) {
             throw new IllegalArgumentException("SimpleCrossover should have 2 parents");
         }
+        System.out.println("Go");
         
         double[] child1 = new double[10];
         double[] child2 = new double[10];
