@@ -85,11 +85,13 @@ public class Population {
         // selection
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);
 
-        //System.out.println("After selection");
-        //for(Double d : getFitnessList()) {
-            //System.out.print(String.format("%.4f ", d));
-        //}
-        //System.out.println();
+
+//        System.out.println("After selection");
+//        for(Double d : getFitnessList()) {
+//            System.out.print(String.format("%.4f ", d));
+//        }
+//        System.out.println();
+
 
     }
 

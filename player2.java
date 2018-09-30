@@ -63,6 +63,7 @@ public class player2 implements ContestSubmission
 
       
 
+
             try {
                 population.nextGeneration();
             } catch (IllegalArgumentException e) {
@@ -82,6 +83,7 @@ public class player2 implements ContestSubmission
 		System.out.print("Score: ");
                 System.out.println(currentFitness);
             }
+
 
         }
         System.out.print("Best ");
