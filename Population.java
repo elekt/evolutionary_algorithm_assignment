@@ -11,7 +11,7 @@ public class Population {
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private Selection selection;
-    private int evals;
+    public static int evals;
     private int evalsLimit;
     private int islands;
     
@@ -29,7 +29,7 @@ public class Population {
         crossover = new TwoPointCrossover(); // OnePoint is default
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
-                                        new SimpleMutation(0.6, 1.5, evalsLimit),
+                                        new SimpleMutation(0.2, 1.5, evalsLimit),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
 	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
@@ -76,7 +76,7 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
+	    List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
 	
         // parent selection
         Collections.sort(individuals);
@@ -163,7 +163,7 @@ public class Population {
             //mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
             mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
 
-	    //evaluate subPopulation:
+    	    //evaluate subPopulation:
             for (Individual individual : children) {
                 if(evals <= evalsLimit) {
                     if(individual.getFitness() < 0.0) {
@@ -176,8 +176,6 @@ public class Population {
 
             currentIslandPopulation.addAll(children);
             // before selection update fitness values
-
-            
 
             // selection within subPopulation
             currentIslandPopulation = selection.selectIndividuals(currentIslandPopulation, subPopSize );
