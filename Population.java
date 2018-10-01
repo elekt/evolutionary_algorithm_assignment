@@ -80,11 +80,6 @@ public class Population {
         // crossover
 	    List<Individual> children = new ArrayList<>();
         Collections.sort(matingPool);
-
-        System.out.println("fitness");
-        for (int i = 0; i < matingPool.size(); i++) {
-            System.out.println(matingPool.get(i).getFitness());
-        }
         for (int i = 0; i < matingPool.size(); i = i+2) {
             children.addAll(crossover.crossover(matingPool.subList(i, i + 2)));
         }
