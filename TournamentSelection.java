@@ -10,6 +10,9 @@ public class TournamentSelection implements Selection {
     private Random rnd;
 
     public TournamentSelection(int matingPoolSize, int numberOfParticipants) {
+        if (matingPoolSize % 2 != 0) {
+            throw new IllegalArgumentException("The mating pool size should be an even number");
+        }
 
         this.matingPoolSize = matingPoolSize;
         this.numberOfParticipants = numberOfParticipants;
@@ -18,6 +21,12 @@ public class TournamentSelection implements Selection {
 
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
+        if (matingPoolSize > individuals.size()) {
+            throw new IllegalArgumentException("The mating pool size cannot be larger than the population");
+        }
+        if (matingPoolSize < 2) {
+            throw new IllegalArgumentException("mating pool should contain at least two parents");
+        }
 
         List<Individual> participants = new ArrayList<>();
         List<Individual> matingPool = new ArrayList<>();

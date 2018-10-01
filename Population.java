@@ -33,11 +33,11 @@ public class Population {
                                         new SimpleMutation(0.2, 1.5, evalsLimit),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
-	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
-                                            new TournamentSelection(2, 4),
+	    parentSelection = new Selection[] { new SimpleParentSelection(6),
+	                                        new RankingSelectionSUS(2, 1.2),
+                                            new TournamentSelection(6, 10),
                                             new UniformParentSelection(2)};
-
-        parentSelectionMethod = 1;
+        parentSelectionMethod = 0;
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
 	
@@ -71,26 +71,30 @@ public class Population {
 
     public void nextGeneration() throws IllegalArgumentException {
 
-        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
         evaluatePopulation();
 
         // parent selection
-        Collections.sort(individuals);
+	    List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 
-	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
-	
-        // parent selection
-        Collections.sort(individuals);
+        // crossover
+	    List<Individual> children = new ArrayList<>();
+        Collections.sort(matingPool);
 
-        //List<Individual> parents = individuals.subList(0, 2);
-        List<Individual> children = crossover.crossover(parents);
-        
-        // select random mutation
+        System.out.println("fitness");
+        for (int i = 0; i < matingPool.size(); i++) {
+            System.out.println(matingPool.get(i).getFitness());
+        }
+        for (int i = 0; i < matingPool.size(); i = i+2) {
+            children.addAll(crossover.crossover(matingPool.subList(i, i + 2)));
+        }
+
+        // mutate children with randomly selected mutation and add them to population
         mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
 	    individuals.addAll(children);
-        // before selection update fitness values
+
+        // before survivor selection update fitness values
         evaluatePopulation();
 
         // survivor selection
@@ -128,7 +132,7 @@ public class Population {
             individuals.sort((c1, c2) -> Integer.compare(c2.subPopulation, c1.subPopulation));
 
 
-            // Select the current island out of the total population.
+            // Select individuals of current island out of the total population.
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
@@ -152,10 +156,15 @@ public class Population {
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
 
-            List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
-            List<Individual> children = crossover.crossover(parents);
+            // parent selection
+            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
 
-            //children.addAll(crossover.crossover(parents));
+            // crossover
+            List<Individual> children = new ArrayList<>();
+            Collections.sort(matingPool);
+            for (int i = 0; i < matingPool.size(); i = i+2) {
+                children.addAll(crossover.crossover(matingPool.subList(i, i + 2)));
+            }
 
             // add subPopulation variable for children, should be the same as the parents
             for (Individual child : children) {

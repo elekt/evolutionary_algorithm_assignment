@@ -10,7 +10,6 @@ public class InversionMutation extends BaseMutation {
 
 
     public InversionMutation(double mutationProbability) {
-
         if(mutationProbability > 1.0 || mutationProbability < 0.0){
             throw new IllegalArgumentException("Probability can only be between 0.0 and 1.0");
         }

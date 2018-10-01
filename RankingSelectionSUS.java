@@ -10,9 +10,11 @@ public class RankingSelectionSUS implements Selection {
     private Random rnd;
 
     public RankingSelectionSUS(int matingPoolSize, double s) {
-
         if (s <= 1 || s > 2) {
             throw new IllegalArgumentException("parameter s has to be 1 < s <= 2");
+        }
+        if (matingPoolSize % 2 != 0) {
+            throw new IllegalArgumentException("The mating pool size should be an even number");
         }
 
         this.matingPoolSize = matingPoolSize;
@@ -22,6 +24,12 @@ public class RankingSelectionSUS implements Selection {
 
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
+        if (matingPoolSize > individuals.size()) {
+            throw new IllegalArgumentException("The mating pool size cannot be larger than the population");
+        }
+        if (matingPoolSize < 2) {
+            throw new IllegalArgumentException("mating pool should contain at least two parents");
+        }
 
         // sort from worst (0) to best (mu - 1)
         Collections.reverse(individuals);
@@ -62,10 +70,6 @@ public class RankingSelectionSUS implements Selection {
 
 
     private List<Individual> StochasticUniversalSampling(List<Individual> individuals, Double[] cumProbDistribution, int matingPoolSize) {
-
-        if (matingPoolSize < 2) {
-            throw new IllegalArgumentException("mating pool should contain at least two parents");
-        }
 
         List<Individual> matingPool = new ArrayList<>();
         int i = 1, currentMember = 1;

@@ -9,6 +9,9 @@ public class UniformParentSelection implements Selection {
     private Random rnd;
 
     public UniformParentSelection(int matingPoolSize) {
+        if (matingPoolSize % 2 != 0) {
+            throw new IllegalArgumentException("The mating pool size should be an even number");
+        }
 
         this.matingPoolSize = matingPoolSize;
         rnd = new Random();
@@ -16,6 +19,12 @@ public class UniformParentSelection implements Selection {
 
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
+        if (matingPoolSize > individuals.size()) {
+            throw new IllegalArgumentException("The mating pool size cannot be larger than the population");
+        }
+        if (matingPoolSize < 2) {
+            throw new IllegalArgumentException("mating pool should contain at least two parents");
+        }
 
         List<Individual> matingPool = new ArrayList<>();
 
