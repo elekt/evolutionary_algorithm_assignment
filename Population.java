@@ -11,7 +11,7 @@ public class Population {
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private Selection selection;
-    private int evals;
+    public static int evals;
     private int evalsLimit;
     private int islands;
     
@@ -29,7 +29,7 @@ public class Population {
         crossover = new TwoPointCrossover(); // OnePoint is default
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
-                                        new SimpleMutation(0.6, 0.05),
+                                        new SimpleMutation(0.6, 1.5, evalsLimit),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
 	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
