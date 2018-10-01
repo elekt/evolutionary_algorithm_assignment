@@ -11,7 +11,7 @@ public class Population {
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private Selection selection;
-    static int evals;
+    private int evals;
     private int evalsLimit;
     private int islands;
     
@@ -29,7 +29,7 @@ public class Population {
         crossover = new TwoPointCrossover(); // OnePoint is default
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
-                                        new SimpleMutation(0.6, 1.5, evalsLimit),
+                                        new SimpleMutation(0.6, 0.05),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
 	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
@@ -37,7 +37,8 @@ public class Population {
                                             new UniformParentSelection(2)};
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
-
+	
+	
         for(int i = 0; i< expectedPopulationSize; ++i){
 	        int subPopulation = i % islands;
 	        individuals.add(new Individual(rnd, subPopulation));
@@ -66,6 +67,7 @@ public class Population {
     }
 
     public void nextGeneration() throws IllegalArgumentException {
+
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
@@ -74,7 +76,7 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	    List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
+	List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
 	
         // parent selection
         Collections.sort(individuals);
@@ -103,12 +105,12 @@ public class Population {
 
         int subPopSize = (expectedPopulationSize/islands);
         List<Individual> newPopulation = new ArrayList<>();
-        List<Individual> leftPopulation = new ArrayList<>();
-        List<Individual> rightPopulation = new ArrayList<>();
+        List<Individual> leftIslandPopulation = new ArrayList<>();
+        List<Individual> rightIslandPopulation = new ArrayList<>();
 
         int exchangeRate = 200;
 
-        for(int i = 0; i< islands; ++i){
+        for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
             // islands notes:
             // How long should I evolve the islands?
@@ -124,47 +126,45 @@ public class Population {
 
 
             // Select the current island out of the total population.
-            List<Individual> subPopulation = new ArrayList<>(individuals.subList((i * subPopSize), (i * subPopSize + subPopSize - 1)));
+            List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
             if (generation % exchangeRate == 0) {
                 // get left and right subPopulations if considered a torus
 
-                int left = ( ((i + (islands - 2))  % (islands - 1)) );
-                int right =  ( (i + 1) % islands % (islands - 1) );
-                leftPopulation.addAll(individuals.subList((left*subPopSize),(left*subPopSize+subPopSize-1)));
-                rightPopulation.addAll(individuals.subList((left*subPopSize),(left*subPopSize+subPopSize-1)));
+                int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
+                int rightIsland =  ( (currentIsland + 1) % islands % (islands - 1) );
+                leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
+                rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
 
                 // add the fittest of the left and right population to subPopulation and clear the populations
-                Collections.sort(leftPopulation);
-                Collections.sort(rightPopulation);
-                subPopulation.addAll(rightPopulation.subList(0, 1));
-                subPopulation.addAll(leftPopulation.subList(0, 1));
-                leftPopulation.clear();
-                rightPopulation.clear();
+                Collections.sort(leftIslandPopulation);
+                Collections.sort(rightIslandPopulation);
+                currentIslandPopulation.addAll(rightIslandPopulation.subList(0, 1));
+                currentIslandPopulation.addAll(leftIslandPopulation.subList(0, 1));
+                leftIslandPopulation.clear();
+                rightIslandPopulation.clear();
             }
 
             // From this point onwards, the subpopulation is used for the methods
-            Collections.sort(subPopulation);
+            Collections.sort(currentIslandPopulation);
 
-            List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
+            List<Individual> parents = parentSelection[2].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
             List<Individual> children = crossover.crossover(parents);
 
             //children.addAll(crossover.crossover(parents));
 
             // add subPopulation variable for children, should be the same as the parents
             for (Individual child : children) {
-                child.setSubPopulation(parents.get(0).subPopulation);
+                child.setSubPopulation(currentIsland);
             }
 
             // select random mutation
             //mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
             mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
-            subPopulation.addAll(children);
-            // before selection update fitness values
 
-            //evaluate subPopulation:
-            for (Individual individual : subPopulation) {
+	    //evaluate subPopulation:
+            for (Individual individual : children) {
                 if(evals <= evalsLimit) {
                     if(individual.getFitness() < 0.0) {
                         double fitness = (double) evaluation.evaluate(individual.getGenome());
@@ -174,11 +174,22 @@ public class Population {
                 }
             }
 
+            currentIslandPopulation.addAll(children);
+            // before selection update fitness values
+
+            
+
             // selection within subPopulation
-            subPopulation = selection.selectIndividuals(subPopulation, subPopSize );
+            currentIslandPopulation = selection.selectIndividuals(currentIslandPopulation, subPopSize );
+
+            //System.out.println("After selection");
+            //for(Double d : getFitnessList()) {
+            //System.out.print(String.format("%.4f ", d));
+            //}
+            //System.out.println();
 
             //add the subPopulation to a new Population
-            newPopulation.addAll(subPopulation);
+            newPopulation.addAll(currentIslandPopulation);
         }
         // remove the old population, and replace it with the new population.
         individuals.clear();
