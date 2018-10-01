@@ -11,7 +11,7 @@ public class Population {
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private Selection selection;
-    public static int evals;
+    static int evals;
     private int evalsLimit;
     private int islands;
     
@@ -37,8 +37,7 @@ public class Population {
                                             new UniformParentSelection(2)};
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
-	
-	
+
         for(int i = 0; i< expectedPopulationSize; ++i){
 	        int subPopulation = i % islands;
 	        individuals.add(new Individual(rnd, subPopulation));
@@ -67,7 +66,6 @@ public class Population {
     }
 
     public void nextGeneration() throws IllegalArgumentException {
-
         // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
@@ -178,12 +176,6 @@ public class Population {
 
             // selection within subPopulation
             subPopulation = selection.selectIndividuals(subPopulation, subPopSize );
-
-            //System.out.println("After selection");
-            //for(Double d : getFitnessList()) {
-            //System.out.print(String.format("%.4f ", d));
-            //}
-            //System.out.println();
 
             //add the subPopulation to a new Population
             newPopulation.addAll(subPopulation);

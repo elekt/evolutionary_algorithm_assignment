@@ -31,12 +31,7 @@ public class RoundRobinSelection implements Selection {
 	    //System.out.println(wins);
         }
 
-        Collections.sort(individuals, new Comparator<Individual>() {
-  public int compare(Individual c1, Individual c2) {
-    if (c1.wins > c2.wins) return -1;
-    if (c1.wins < c2.wins) return 1;
-    return 0;
-  }});
+        individuals.sort((c1, c2) -> Integer.compare(c2.wins, c1.wins));
 	//System.out.println(individuals);
         //Collections.sort(individuals);
 	//System.out.println(individuals);
