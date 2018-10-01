@@ -17,11 +17,6 @@ public class UniformParentSelection implements Selection {
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
 
-//        // set parameters
-//        matingPoolSize = 2;
-//
-//        rnd = new Random();
-
         List<Individual> matingPool = new ArrayList<>();
 
         int currentMember = 1;
@@ -30,7 +25,7 @@ public class UniformParentSelection implements Selection {
             matingPool.add(individuals.get(rnd.nextInt(individuals.size())));
             currentMember++;
         }
-//
+
 //        System.out.println("______________MATING POOL");
 //        for (int i = 0; i < matingPoolSize; i++) {
 //            System.out.println(matingPool.get(i).getFitness());

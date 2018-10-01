@@ -19,8 +19,6 @@ public class Individual implements Comparable<Individual>{
     this.setSubPopulation(subPopulation);
     }
 
-
-
     public Individual(double[] _genome) {
         genome = _genome;
     }
@@ -67,8 +65,6 @@ public class Individual implements Comparable<Individual>{
         return other.fitness.compareTo(this.fitness);
     }
 
-    
-
     public double getMaxValue() {
         return maxValue;
     }
@@ -80,7 +76,7 @@ public class Individual implements Comparable<Individual>{
     public void setSubPopulation(int subPopulation) {
     this.subPopulation = subPopulation;
     }
-    
+
     public int getSubPopulation() {
     return subPopulation;
     }

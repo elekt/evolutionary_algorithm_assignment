@@ -19,12 +19,6 @@ public class TournamentSelection implements Selection {
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
 
-//        // set parameters
-//        matingPoolSize = 2;
-//        numberOfParticipants = 4;
-//
-//        rnd = new Random();
-
         List<Individual> participants = new ArrayList<>();
         List<Individual> matingPool = new ArrayList<>();
 
