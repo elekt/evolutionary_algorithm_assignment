@@ -32,7 +32,7 @@ public class player2 implements ContestSubmission
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
 
-        //evaluations_limit = 1000;
+        //evaluations_limit = 40;
 
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
@@ -50,40 +50,49 @@ public class player2 implements ContestSubmission
     
 	public void run()
 	{
-	    int generation = 0;
+		System.out.print("BAAAH");
+
+		int generation = 0;
+	    
+	    int popSize = 400;
+	    // if islands = 1, then it works as if there are
+	    int islands = 40;
 
 
         // init population
-        population = new Population(10, rnd, evaluation);
-        // calculate fitness
+	if (islands > 1){
+	    population = new Population(popSize, rnd, evaluation, islands);
 
-        while(population.getEvaluationCount() < evaluations_limit){
-            // Select parents
-			double currentFitness = population.evaluatePopulation();
+	} else {
+            population = new Population(popSize, rnd, evaluation, 1);
+	}
 
-      
-
-            try {
-                population.nextGeneration();
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                break;
-            }
+	while(population.getEvaluationCount() < evaluations_limit){
+		// Select parents
+		double currentFitness = population.evaluatePopulation();
+		try {
+			if (islands > 1){
+				population.nextGenerationIslands(generation);
+			} else {
+				population.nextGeneration();
+			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			break;
+		}
 	    generation += 1;
-	    System.out.print("Score: ");
-                System.out.println(population.evaluatePopulation());
-		System.out.print("Generation: ");
-		System.out.println(generation);
 
+		if(generation % 100 == 0) {
+			System.out.print("Generation: ");
+			System.out.print(generation);
+			System.out.print(", Score: ");
+			System.out.println(population.getFittest().getFitness());
+			//System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+			System.out.print("Score: ");
+			System.out.println(currentFitness);
+		}
 
-            if(population.getEvaluationCount() % 50 == 0) {
-		
-                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-		System.out.print("Score: ");
-                System.out.println(currentFitness);
-            }
-
-        }
-        System.out.print("Best ");
+		}
+		System.out.print("Best ");
 	}
 }

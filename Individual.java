@@ -9,12 +9,14 @@ public class Individual implements Comparable<Individual>{
     private double minValue = -5;
     private int dimensions = 10;
     public int wins = 0;
+    public int subPopulation = 1;
 
-    public Individual(Random _rnd) {
+    public Individual(Random _rnd, int subPopulation) {
         genome = new double[dimensions];
         for(int i=0; i<dimensions; ++i){
             genome[i] = _rnd.nextDouble()*(maxValue-minValue) - maxValue;
         }
+    this.setSubPopulation(subPopulation);
     }
 
     public Individual(double[] _genome) {
@@ -69,6 +71,14 @@ public class Individual implements Comparable<Individual>{
 
     public double getMinValue() {
         return minValue;
+    }
+
+    public void setSubPopulation(int subPopulation) {
+    this.subPopulation = subPopulation;
+    }
+
+    public int getSubPopulation() {
+    return subPopulation;
     }
 
 }
