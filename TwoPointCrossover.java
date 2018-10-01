@@ -15,15 +15,15 @@ public class TwoPointCrossover implements Crossover {
         int Low1 = 0;
         int High1 = 7;
         int P1 = r1.nextInt(High1-Low1) + Low1;
-        System.out.print("P1:");
-        System.out.println(P1);
+//        System.out.print("P1:");
+//        System.out.println(P1);
 
         Random r2 = new Random();
         int Low2 = P1;
         int High2 = 10;
         int P2 = r2.nextInt(High2-Low2) + Low2;
-        System.out.print("P2:");
-        System.out.println(P2);
+//        System.out.print("P2:");
+//        System.out.println(P2);
 
         for (int i = 0; i < 10; i++) {
           if(i<=P1) {

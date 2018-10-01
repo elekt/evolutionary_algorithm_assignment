@@ -10,8 +10,10 @@ public class player2 implements ContestSubmission
 	private ContestEvaluation evaluation;
     private int evaluations_limit;
 	private Population population;
+    private int islands;
 
-	public player2()
+
+    public player2()
 	{
 		rnd = new Random();
 	}
@@ -42,9 +44,9 @@ public class player2 implements ContestSubmission
 
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
-            // Do sth
+            islands = 40;
         }else{
-            // Do sth else
+            islands = 1;
         }
     }
     
@@ -53,8 +55,6 @@ public class player2 implements ContestSubmission
 		int generation = 0;
 	    
 	    int popSize = 400;
-	    // if islands = 1, then it works as if there are
-	    int islands = 40;
 
         // init population
         population = new Population(popSize, rnd, evaluation, islands);
