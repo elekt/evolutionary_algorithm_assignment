@@ -1,8 +1,8 @@
-import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
+import org.vu.contest.ContestSubmission;
 
-import java.util.Random;
 import java.util.Properties;
+import java.util.Random;
 
 public class player2 implements ContestSubmission
 {
@@ -11,7 +11,7 @@ public class player2 implements ContestSubmission
     private int evaluations_limit;
 	private Population population;
     private int islands;
-
+    private int popSize;
 
     public player2()
 	{
@@ -34,8 +34,6 @@ public class player2 implements ContestSubmission
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
 
-        //evaluations_limit = 40;
-
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -45,8 +43,10 @@ public class player2 implements ContestSubmission
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
             islands = 40;
+            popSize = 200;
         }else{
             islands = 1;
+            popSize = 20;
         }
     }
     
@@ -54,8 +54,6 @@ public class player2 implements ContestSubmission
 	{
 		int generation = 0;
 	    
-	    int popSize = 400;
-
         // init population
         population = new Population(popSize, rnd, evaluation, islands);
 
@@ -75,13 +73,13 @@ public class player2 implements ContestSubmission
             generation += 1;
 
             if(generation % 100 == 0) {
-                System.out.print("Generation: ");
-                System.out.print(generation);
-                System.out.print(", Score: ");
-                System.out.println(population.getFittest().getFitness());
-                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-                System.out.print("Score: ");
-                System.out.println(currentFitness);
+//                System.out.print("Generation: ");
+//                System.out.print(generation);
+//                System.out.print(", Score: ");
+//                System.out.println(population.getFittest().getFitness());
+//                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+//                System.out.print("Score: ");
+//                System.out.println(currentFitness);
             }
 		}
 		System.out.print("Best ");

@@ -40,8 +40,7 @@ public class Population {
         parentSelectionMethod = 0;
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
-	
-	
+
         for(int i = 0; i< expectedPopulationSize; ++i){
 	        int subPopulation = i % islands;
 	        individuals.add(new Individual(rnd, subPopulation));
@@ -205,9 +204,7 @@ public class Population {
         individuals.clear();
         individuals.addAll(newPopulation);
         evaluatePopulation();
-	
     }
-
 
     public Individual getFittest() {
         Collections.sort(individuals);
