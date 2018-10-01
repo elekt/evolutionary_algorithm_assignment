@@ -5,7 +5,6 @@ public class ScrambleMutation extends BaseMutation {
     private double mutationProbability;
     private Random rnd;
 
-
     public ScrambleMutation(double mutationProbability) {
 
         if(mutationProbability > 1.0 || mutationProbability < 0.0){
@@ -26,7 +25,6 @@ public class ScrambleMutation extends BaseMutation {
                 order.add(i);
             }
             Collections.shuffle(order);
-
 
             for(int i = 0; i < individual.getGenome().length; ++i) {
                 int swapIndex = order.get(i);
