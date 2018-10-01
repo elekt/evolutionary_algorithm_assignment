@@ -10,6 +10,7 @@ public class Population {
     private Crossover crossover;
     private Mutation[] mutations;
     private Selection[] parentSelection;
+    private int parentSelectionMethod;
     private Selection selection;
     public static int evals;
     private int evalsLimit;
@@ -35,6 +36,8 @@ public class Population {
 	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
                                             new TournamentSelection(2, 4),
                                             new UniformParentSelection(2)};
+
+        parentSelectionMethod = 1;
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
 	
@@ -76,7 +79,7 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	    List<Individual> parents = parentSelection[2].selectIndividuals(individuals, expectedPopulationSize);
+	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 	
         // parent selection
         Collections.sort(individuals);
@@ -149,7 +152,7 @@ public class Population {
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
 
-            List<Individual> parents = parentSelection[2].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
+            List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
             List<Individual> children = crossover.crossover(parents);
 
             //children.addAll(crossover.crossover(parents));

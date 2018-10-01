@@ -23,15 +23,13 @@ public class RankingSelectionSUS implements Selection {
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
 
-        // set parameters
-//        s = 1.3;
-//        matingPoolSize = 2;
-//
-//        rnd = new Random();
-
         // sort from worst (0) to best (mu - 1)
         Collections.reverse(individuals);
 
+
+//        System.out.println("individuals" + individuals.size());
+//        System.out.println("populationsSize" + populationSize);
+//
 //        System.out.println("SORTED");
 //
 //        for (int i=0; i < populationSize; i++) {
