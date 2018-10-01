@@ -50,7 +50,9 @@ public class player2 implements ContestSubmission
     
 	public void run()
 	{
-	    int generation = 0;
+		System.out.print("BAAAH");
+
+		int generation = 0;
 	    
 	    int popSize = 400;
 	    // if islands = 1, then it works as if there are
@@ -64,43 +66,33 @@ public class player2 implements ContestSubmission
 	} else {
             population = new Population(popSize, rnd, evaluation, 1);
 	}
-        // calculate fitness
 
-        while(population.getEvaluationCount() < evaluations_limit){
-            // Select parents
-			double currentFitness = population.evaluatePopulation();
-
-      
-
-            try {
-		if (islands > 1){
-		
-		population.nextGenerationIslands(generation);
-		} else {
-
-                population.nextGeneration();
+	while(population.getEvaluationCount() < evaluations_limit){
+		// Select parents
+		double currentFitness = population.evaluatePopulation();
+		try {
+			if (islands > 1){
+				population.nextGenerationIslands(generation);
+			} else {
+				population.nextGeneration();
+			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			break;
 		}
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                break;
-            }
 	    generation += 1;
 
-	    
-		
+		if(generation % 100 == 0) {
+			System.out.print("Generation: ");
+			System.out.print(generation);
+			System.out.print(", Score: ");
+			System.out.println(population.getFittest().getFitness());
+			//System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
+			System.out.print("Score: ");
+			System.out.println(currentFitness);
+		}
 
-
-            if(generation % 100 == 0) {
-		System.out.print("Generation: ");
-		System.out.print(generation);
-	        System.out.print(", Score: ");
-                System.out.println(population.getFittest().getFitness());
-                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-		System.out.print("Score: ");
-                System.out.println(currentFitness);
-            }
-
-        }
-        System.out.print("Best ");
+		}
+		System.out.print("Best ");
 	}
 }
