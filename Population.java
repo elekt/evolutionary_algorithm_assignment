@@ -3,11 +3,12 @@ import org.vu.contest.ContestEvaluation;
 import java.util.*;
 
 public class Population {
+    private int crossoverMethod;
     private List<Individual> individuals;
     private int expectedPopulationSize;
     private ContestEvaluation evaluation;
     private Random rnd;
-    private Crossover crossover;
+    private Crossover[] crossover;
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private int parentSelectionMethod;
@@ -27,20 +28,27 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
-        crossover = new TwoPointCrossover(); // OnePoint is default
+        crossover = new Crossover[] {  new OnePointCrossover(),
+                                        new TwoPointCrossover(),
+                                        new UniformCrossover(),
+                                        new BlendCrossover()};
 
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.2, 1.5, evalsLimit),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
-	    parentSelection = new Selection[] { new SimpleParentSelection(6),
-	                                        new RankingSelectionSUS(2, 1.2),
-                                            new TournamentSelection(6, 10),
+
+	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
+                                            new TournamentSelection(2, 4),
                                             new UniformParentSelection(2)};
-        parentSelectionMethod = 0;
+
+        parentSelectionMethod = 1;
+        crossoverMethod = 2;
+
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
-
+	
+	
         for(int i = 0; i< expectedPopulationSize; ++i){
 	        int subPopulation = i % islands;
 	        individuals.add(new Individual(rnd, subPopulation));
@@ -70,25 +78,26 @@ public class Population {
 
     public void nextGeneration() throws IllegalArgumentException {
 
+        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
         // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
         evaluatePopulation();
 
         // parent selection
-	    List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+        Collections.sort(individuals);
 
-        // crossover
-	    List<Individual> children = new ArrayList<>();
-        Collections.sort(matingPool);
-        for (int i = 0; i < matingPool.size(); i = i+2) {
-            children.addAll(crossover.crossover(matingPool.subList(i, i + 2)));
-        }
+	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+	
+        // parent selection
+        Collections.sort(individuals);
 
-        // mutate children with randomly selected mutation and add them to population
+        //List<Individual> parents = individuals.subList(0, 2);
+        List<Individual> children = crossover[crossoverMethod].crossover(parents);
+        
+        // select random mutation
         mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
 	    individuals.addAll(children);
-
-        // before survivor selection update fitness values
+        // before selection update fitness values
         evaluatePopulation();
 
         // survivor selection
@@ -126,7 +135,7 @@ public class Population {
             individuals.sort((c1, c2) -> Integer.compare(c2.subPopulation, c1.subPopulation));
 
 
-            // Select individuals of current island out of the total population.
+            // Select the current island out of the total population.
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
@@ -150,15 +159,10 @@ public class Population {
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
 
-            // parent selection
-            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
+            List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
+            List<Individual> children = crossover[crossoverMethod].crossover(parents);
 
-            // crossover
-            List<Individual> children = new ArrayList<>();
-            Collections.sort(matingPool);
-            for (int i = 0; i < matingPool.size(); i = i+2) {
-                children.addAll(crossover.crossover(matingPool.subList(i, i + 2)));
-            }
+            //children.addAll(crossover.crossover(parents));
 
             // add subPopulation variable for children, should be the same as the parents
             for (Individual child : children) {
@@ -199,7 +203,9 @@ public class Population {
         individuals.clear();
         individuals.addAll(newPopulation);
         evaluatePopulation();
+	
     }
+
 
     public Individual getFittest() {
         Collections.sort(individuals);
