@@ -11,7 +11,7 @@ public class RankingSelectionSUS implements Selection {
 
     public RankingSelectionSUS(int matingPoolSize, double s) {
         if (s <= 1 || s > 2) {
-            throw new IllegalArgumentException("parameter s has to be 1 < s <= 2");
+            throw new IllegalArgumentException("parameter s has to be 1 <= s < 2");
         }
         if (matingPoolSize % 2 != 0) {
             throw new IllegalArgumentException("The mating pool size should be an even number");
