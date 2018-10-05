@@ -51,10 +51,11 @@ public class Population {
                                      new ExchangeRandom(),
                                      new ExchangePickFromFittestHalf()};
 
-        parentSelectionMethod = 1;
-        crossoverMethod = 2;
-	    mutationMethod = 1;
-        exchangeMethod = 1;
+        parentSelectionMethod = paramMap.get("parentSelectionMethod").intValue();
+        crossoverMethod = paramMap.get("crossoverMethod").intValue();
+	    mutationMethod = paramMap.get("mutationMethod").intValue();
+        exchangeMethod = paramMap.get("exchangeMethod").intValue();
+
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
 	
