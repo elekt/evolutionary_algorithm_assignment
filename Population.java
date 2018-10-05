@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Population {
     private int crossoverMethod;
+    private int mutationMethod;
     private List<Individual> individuals;
     private int expectedPopulationSize;
     private ContestEvaluation evaluation;
@@ -16,6 +17,7 @@ public class Population {
     public static int evals;
     private int evalsLimit;
     private int islands;
+    private Exchange[] exchange;
     
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands) {
@@ -33,17 +35,23 @@ public class Population {
                                         new UniformCrossover(),
                                         new BlendCrossover()};
 
+
         mutations = new Mutation[] {    new InversionMutation(0.6),
                                         new SimpleMutation(0.2, 1.5, evalsLimit),
                                         new SwapMutation(0.6, 2),
                                         new ScrambleMutation(0.6) };
 
-	    parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
+	parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
                                             new TournamentSelection(2, 4),
                                             new UniformParentSelection(2)};
 
+	exchange = new Exchange[] {  new ExchangeBest(),
+                                     new ExchangeRandom(),
+                                     new ExchangePickFromFittestHalf()};
+
         parentSelectionMethod = 1;
         crossoverMethod = 2;
+	mutationMethod = 1;
 
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
@@ -86,7 +94,7 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+	List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 	
         // parent selection
         Collections.sort(individuals);
@@ -120,14 +128,57 @@ public class Population {
 
         int exchangeRate = 200;
 
+
+	// Many different islands, each its own operator/algortihm and see what happens? done, not very elegant though
+	List<String> islandAlgorithms = Arrays.asList("no_distinction", "ordered_distinction", "random_distinction");
+
+        String islandAlgorithm = islandAlgorithms.get(2);
+
+        int[] parentSelectionMethodList = new int[islands];
+        int[] crossoverMethodList = new int[islands];
+        int[] mutationMethodList = new int[islands];
+
+        if (islandAlgorithm == "random_distinction"){
+
+            for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
+                parentSelectionMethodList[currentIsland] = rnd.nextInt(parentSelection.length);
+                crossoverMethodList[currentIsland] = rnd.nextInt(crossover.length);
+                mutationMethodList[currentIsland] = rnd.nextInt(mutations.length);
+            }
+            
+        } else if (islandAlgorithm == "ordered_distinction"){
+            int count = 0;
+            while (count < islands) {
+                for(int parentSelectionCount = 0; parentSelectionCount< parentSelection.length; ++parentSelectionCount){
+                    for(int crossoverCount = 0; crossoverCount< crossover.length; ++crossoverCount){
+                        for(int mutationCount = 0; mutationCount< mutations.length; ++mutationCount){
+
+                            parentSelectionMethodList[count] = parentSelectionCount;
+                            crossoverMethodList[count] = crossoverCount; 
+                            mutationMethodList[count] = mutationCount;
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+
         for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
             // islands notes:
             // How long should I evolve the islands?
             // When should I start with mutations?
-            // Which indivuals to exchange, random/best, and how many?
+            // Which indivuals to exchange, random/best, and how many? done
+            
+            
+            int amountIndivExchange = 2; 
+            if (amountIndivExchange >= Math.round(subPopSize/2)) {
+            	throw new IllegalArgumentException("Amount of individuals to exchange should be lower than half the population");
+            }
+
             // Shall we copy or move individuals between islands?
-            // Many different islands, each its own operator/algortihm and see what happens?
+            
+	
 
             // islands, if input islands == 1 in player.java, it will work the same as without islands
 
@@ -147,18 +198,29 @@ public class Population {
                 leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
                 rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
 
-                // add the fittest of the left and right population to subPopulation and clear the populations
-                Collections.sort(leftIslandPopulation);
-                Collections.sort(rightIslandPopulation);
-                currentIslandPopulation.addAll(rightIslandPopulation.subList(0, 1));
-                currentIslandPopulation.addAll(leftIslandPopulation.subList(0, 1));
+		currentIslandPopulation = exchange[0].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, amountIndivExchange);
+                   
                 leftIslandPopulation.clear();
                 rightIslandPopulation.clear();
             }
 
+	    if (islandAlgorithm != "no_distinction"){
+                parentSelectionMethod = parentSelectionMethodList[currentIsland];
+		
+                crossoverMethod = crossoverMethodList[currentIsland];
+                mutationMethod = mutationMethodList[currentIsland];
+            } else {
+                parentSelectionMethod = rnd.nextInt(parentSelection.length);
+                crossoverMethod = rnd.nextInt(crossover.length);
+                mutationMethod = rnd.nextInt(mutations.length);
+            }
+	    //parentSelectionMethod 0 does not work yet:
+	    parentSelectionMethod = 1;
+
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
 
+	    //System.out.println(currentIslandPopulation.size());
             List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
 
@@ -171,7 +233,7 @@ public class Population {
 
             // select random mutation
             //mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
-            mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
+            mutations[mutationMethod].mutateIndividuals(children);
 
     	    //evaluate subPopulation:
             for (Individual individual : children) {
