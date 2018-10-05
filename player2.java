@@ -1,6 +1,8 @@
 import org.vu.contest.ContestEvaluation;
 import org.vu.contest.ContestSubmission;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
@@ -42,7 +44,7 @@ public class player2 implements ContestSubmission
 
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
-            islands = 40;
+            islands = 10;
             popSize = 200;
         }else{
             islands = 1;
@@ -53,9 +55,11 @@ public class player2 implements ContestSubmission
 	public void run()
 	{
 		int generation = 0;
-	    
+
+        Map<String, Double> paramMap = getAlgorithmParams();
+
         // init population
-        population = new Population(popSize, rnd, evaluation, islands);
+        population = new Population(popSize, rnd, evaluation, islands, paramMap);
 
         while(population.getEvaluationCount() < evaluations_limit){
             // Select parents
@@ -84,4 +88,19 @@ public class player2 implements ContestSubmission
 		}
 		System.out.print("Best ");
 	}
+
+
+	private Map<String, Double> getAlgorithmParams() {
+        Map<String, Double> ret = new HashMap<>();
+
+        String s = System.getProperty("var1");
+
+        String[] pairs = s.split(",");
+        for (int i=0; i<pairs.length; i++) {
+            String pair = pairs[i];
+            String[] keyValue = pair.split(":");
+            ret.put(keyValue[0], Double.valueOf(keyValue[1]));
+        }
+        return ret;
+    }
 }
