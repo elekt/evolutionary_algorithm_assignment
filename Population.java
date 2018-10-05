@@ -13,17 +13,20 @@ public class Population {
     private Mutation[] mutations;
     private Selection[] parentSelection;
     private int parentSelectionMethod;
+    private int exchangeMethod;
     private Selection selection;
     public static int evals;
     private int evalsLimit;
     private int islands;
     private Exchange[] exchange;
+    private Map<String, Double> paramMap;
     
 
-    public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands) {
+    public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands, Map<String, Double> _paramMap) {
         expectedPopulationSize = _size;
         evaluation = _evaluation;
 	    islands = _islands;
+        paramMap = _paramMap;
         individuals = new ArrayList<>();
         rnd = _rnd;
         Properties props = evaluation.getProperties();
@@ -35,24 +38,23 @@ public class Population {
                                         new UniformCrossover(),
                                         new BlendCrossover()};
 
+        mutations = new Mutation[] {    new InversionMutation(paramMap.get("InversionMutationProbability")),
+                                        new SimpleMutation(paramMap.get("SimpleMutationProbability"), paramMap.get("SimpleMutationSpeed"), evalsLimit),
+                                        new SwapMutation(paramMap.get("SwapMutationProbability"), paramMap.get("SwapMutationNumberOfSwaps").intValue()),
+                                        new ScrambleMutation(paramMap.get("ScrambleMutationProbability")) };
 
-        mutations = new Mutation[] {    new InversionMutation(0.6),
-                                        new SimpleMutation(0.2, 1.5, evalsLimit),
-                                        new SwapMutation(0.6, 2),
-                                        new ScrambleMutation(0.6) };
+        parentSelection = new Selection[] { new RankingSelectionSUS(paramMap.get("RankingSelectionSUSMatingPoolSize").intValue(), paramMap.get("RankingSelectionSUSs")),
+                                            new TournamentSelection(paramMap.get("TournamentSelectionMatingPoolSize").intValue(), paramMap.get("TournamentSelectionNumberOfParticipiants").intValue()),
+                                            new UniformParentSelection(paramMap.get("UniformParentSelectionMatingPoolSize").intValue())};
 
-	parentSelection = new Selection[] { new RankingSelectionSUS(2, 1.3),
-                                            new TournamentSelection(2, 4),
-                                            new UniformParentSelection(2)};
-
-	exchange = new Exchange[] {  new ExchangeBest(),
+	    exchange = new Exchange[] {  new ExchangeBest(),
                                      new ExchangeRandom(),
                                      new ExchangePickFromFittestHalf()};
 
         parentSelectionMethod = 1;
         crossoverMethod = 2;
-	mutationMethod = 1;
-
+	    mutationMethod = 1;
+        exchangeMethod = 1;
         //selection = new SimpleSelection();
 	    selection = new RoundRobinSelection();
 	
@@ -202,7 +204,7 @@ public class Population {
                 leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
                 rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
 
-		currentIslandPopulation = exchange[0].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, amountIndivExchange);
+		currentIslandPopulation = exchange[exchangeMethod].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, amountIndivExchange);
                    
                 leftIslandPopulation.clear();
                 rightIslandPopulation.clear();

@@ -11,6 +11,10 @@ import subprocess
 # "TournamentSelectionMatingPoolSize: 2 - 8 % 2
 # "TournamentSelectionNumberOfParticipiants: 1 - 8
 # "UniformParentSelectionMatingPoolSize: 2 - 8 % 2
+# crossoverMethod 0 - 3
+# mutationMethod 0 - 3
+# parentSelectionMethod 0 - 2
+# exchangeMethod 0 - 2
 
 
 params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},ParentSelectionMethod:{},CrossoverMethod:{}"
