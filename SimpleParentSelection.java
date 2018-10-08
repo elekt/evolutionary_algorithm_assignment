@@ -10,6 +10,7 @@ public class SimpleParentSelection implements Selection {
             throw new IllegalArgumentException("The mating pool size should be an even number");
         }
         if (matingPoolSize < 2) {
+            System.out.println(this.getClass().getName());
             throw new IllegalArgumentException("mating pool should contain at least two parents");
         }
         this.matingPoolSize = matingPoolSize;

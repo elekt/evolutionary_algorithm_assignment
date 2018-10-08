@@ -97,7 +97,7 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 	
         // parent selection
         Collections.sort(individuals);

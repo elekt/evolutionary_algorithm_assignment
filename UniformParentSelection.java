@@ -23,6 +23,7 @@ public class UniformParentSelection implements Selection {
             throw new IllegalArgumentException("The mating pool size cannot be larger than the population");
         }
         if (matingPoolSize < 2) {
+            System.out.println(this.getClass().getName());
             throw new IllegalArgumentException("mating pool should contain at least two parents");
         }
 

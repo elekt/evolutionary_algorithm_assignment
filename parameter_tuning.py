@@ -28,7 +28,7 @@ def generateParentselectionAndParams(evaluation,InversionMutationProbability,Sim
 
     for parentSelectionMethod in range(0, 3):
         RankingSelectionSUSMatingPoolSize = 0
-        RankingSelectionSUSs = 0
+        RankingSelectionSUSs = 1.1
         TournamentSelectionMatingPoolSize = 0
         TournamentSelectionNumberOfParticipiants = 0
         UniformParentSelectionMatingPoolSize = 0
@@ -36,12 +36,15 @@ def generateParentselectionAndParams(evaluation,InversionMutationProbability,Sim
         if parentSelectionMethod == 0:
             # "RankingSelectionSUSMatingPoolSize: 0 - 6 % 2
             # "RankingSelectionSUSs: 1.0 - 2.0
-            for ps in range(0, 7, 2):
+            for ps in range(2, 7, 2):
                 RankingSelectionSUSMatingPoolSize = ps
                 for s in np.arange(1.0, 2.0, step):
                     RankingSelectionSUSs = s
-                    # params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
-                    # print(params)
+                    params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
+                    result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                    print(params)
+                    print(result)
+
                     counter += 1
         elif parentSelectionMethod == 1:
             # "TournamentSelectionMatingPoolSize: 2 - 8 % 2
@@ -50,15 +53,21 @@ def generateParentselectionAndParams(evaluation,InversionMutationProbability,Sim
                 TournamentSelectionMatingPoolSize = ps
                 for s in range(1, 9):
                     TournamentSelectionNumberOfParticipiants = s
-                    # params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
-                    # print(params)
+                    params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
+                    result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                    print(params)
+                    print(result)
+
                     counter += 1
         elif parentSelectionMethod == 2:
             # "UniformParentSelectionMatingPoolSize: 2 - 8 % 2
             for ps in range(2, 9, 2):
                 UniformParentSelectionMatingPoolSize = ps
-                # params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
-                # print(params)
+                params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
+                result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                print(params)
+                print(result)
+
                 counter += 1
         else:
             print("Invalid mutation method")
