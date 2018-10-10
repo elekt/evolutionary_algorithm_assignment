@@ -6,11 +6,15 @@ import java.lang.Math;
 import java.util.Comparator;
 
 public class RoundRobinSelection implements Selection {
+    private int q;
 
+    public RoundRobinSelection(int q) {
+	this.q = q;
+    }
 
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
-	int q = 5;
+	
 	// int populationSize = 15;
 	
 	for (Individual individual : individuals) {

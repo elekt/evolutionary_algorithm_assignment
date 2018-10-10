@@ -16,13 +16,14 @@ import numpy as np
 # mutationMethod 0 - 3
 # parentSelectionMethod 0 - 2
 # exchangeMethod 0 - 2
+# tournamentSurvivorSelectionSize 5
 
 counter = 0
 step = 0.1
 
 def generateParentselectionAndParams(evaluation,InversionMutationProbability,SimpleMutationProbability,
                                      SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,
-                                     ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod):
+                                     ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod, tournamentSurvivorSelectionSize):
     global counter
     global step
 
@@ -32,6 +33,8 @@ def generateParentselectionAndParams(evaluation,InversionMutationProbability,Sim
         TournamentSelectionMatingPoolSize = 0
         TournamentSelectionNumberOfParticipiants = 0
         UniformParentSelectionMatingPoolSize = 0
+	tournamentSurvivorSelectionSize = 5
+	
 
         if parentSelectionMethod == 0:
             # "RankingSelectionSUSMatingPoolSize: 0 - 6 % 2
@@ -92,7 +95,7 @@ for evaluation in ["SchaffersEvaluation", "BentCigarFunction", "KatsuuraEvaluati
                         InversionMutationProbability = p
                         generateParentselectionAndParams(evaluation, InversionMutationProbability,SimpleMutationProbability,
                                                          SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,
-                                                         ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod)
+                                                         ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod, tournamentSurvivorSelectionSize)
                 elif mutationMethod == 1:
                     # "SimpleMutationProbability: 0.0 - 1.0
                     # "SimpleMutationSpeed: 0.0 - 2.5
@@ -102,7 +105,7 @@ for evaluation in ["SchaffersEvaluation", "BentCigarFunction", "KatsuuraEvaluati
                             SimpleMutationSpeed = s
                             generateParentselectionAndParams(evaluation, InversionMutationProbability,SimpleMutationProbability,
                                                              SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,
-                                                             ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod)
+                                                             ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod, tournamentSurvivorSelectionSize)
                 elif mutationMethod == 2:
                     # "SwapMutationProbability: 0.0 - 1.0
                     # "SwapMutationNumberOfSwaps: 1 - 5
@@ -112,14 +115,14 @@ for evaluation in ["SchaffersEvaluation", "BentCigarFunction", "KatsuuraEvaluati
                             SwapMutationNumberOfSwaps = s
                             generateParentselectionAndParams(evaluation, InversionMutationProbability,SimpleMutationProbability,
                                                              SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,
-                                                             ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod)
+                                                             ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod, tournamentSurvivorSelectionSize)
                 elif mutationMethod == 3:
                     # "ScrambleMutationProbability: 0.0 - 1.0
                     for p in np.arange(0.0, 1.05, step):
                         ScrambleMutationProbability = p
                         generateParentselectionAndParams(evaluation, InversionMutationProbability,SimpleMutationProbability,
                                                          SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,
-                                                         ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod)
+                                                         ScrambleMutationProbability,crossoverMethod,mutationMethod,exchangeMethod, tournamentSurvivorSelectionSize)
                 else:
                     print("Invalid mutation method")
 
