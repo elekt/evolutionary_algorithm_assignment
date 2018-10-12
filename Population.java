@@ -221,7 +221,7 @@ public class Population {
 
 	    //System.out.println(currentIslandPopulation.size());
             // parent selection
-            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
 
             // crossover
             List<Individual> children = new ArrayList<>();
