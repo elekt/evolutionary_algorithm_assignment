@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class SimpleMutation extends BaseMutation{
+public class UniformMutation extends BaseMutation{
 
     private double mutationProbability;
     private double mutationSpeed;
@@ -8,7 +8,7 @@ public class SimpleMutation extends BaseMutation{
     private int maxEvalCount;
 
 
-    public SimpleMutation(double mutationProbability, double mutationSpeed, int maxEvalCount) {
+    public UniformMutation(double mutationProbability, double mutationSpeed, int maxEvalCount) {
         this.maxEvalCount = maxEvalCount;
 
         if(mutationProbability > 1.0 || mutationProbability < 0.0){

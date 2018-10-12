@@ -3,5 +3,9 @@ export LD_LIBRARY_PATH=./
 javac -cp contest.jar *.java
 jar cmf MainClass.txt submission.jar *.class
 jar uf testrun.jar *.class
-java -Dvar1="InversionMutationProbability:0.6,SimpleMutationProbability:0.6,SimpleMutationSpeed:1.5,SwapMutationProbability:0.6,SwapMutationNumberOfSwaps:3,ScrambleMutationProbability:0.6,RankingSelectionSUSMatingPoolSize:2,RankingSelectionSUSs:1.3,TournamentSelectionMatingPoolSize:2,TournamentSelectionNumberOfParticipiants:4,UniformParentSelectionMatingPoolSize:2,parentSelectionMethod:1,crossoverMethod:1,mutationMethod:2,exchangeMethod:2,tournamentSurvivorSelectionSize:5" -jar testrun.jar -submission=player2 -evaluation=BentCigarFunction -seed=1
+java -Dvar1="subPopulationSize:20,numberOfIslands:5,migrationSize:5,UniformMutationProbability:0.5,UniformMutationSpeed:0.5,TournamentSelectionMatingPoolSize:10,TournamentSelectionNumberOfParticipiants:10,
+parentSelectionMethod:1,crossoverMethod:2,mutationMethod:1,exchangeMethod:0,roundRobinroundRobinTournamentSurvivorSelectionSize:5" -jar testrun.jar -submission=player2 -evaluation=BentCigarFunction -seed=1
 python clean.py
+
+
+

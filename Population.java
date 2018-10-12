@@ -32,32 +32,33 @@ public class Population {
         Properties props = evaluation.getProperties();
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
+
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
         crossover = new Crossover[] {  new OnePointCrossover(),
                                         new TwoPointCrossover(),
                                         new UniformCrossover(),
                                         new BlendCrossover()};
 
-        mutations = new Mutation[] {    new InversionMutation(paramMap.get("InversionMutationProbability")),
-                                        new SimpleMutation(paramMap.get("SimpleMutationProbability"), paramMap.get("SimpleMutationSpeed"), evalsLimit),
-                                        new SwapMutation(paramMap.get("SwapMutationProbability"), paramMap.get("SwapMutationNumberOfSwaps").intValue()),
-                                        new ScrambleMutation(paramMap.get("ScrambleMutationProbability")) };
+        mutations = new Mutation[] {    new InversionMutation(paramMap.getOrDefault("InversionMutationProbability, 0.5", 0.5)),
+                                        new UniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5), paramMap.getOrDefault("SimpleMutationSpeed", 0.5), evalsLimit),
+                                        new SwapMutation(paramMap.getOrDefault("SwapMutationProbability", 0.5), paramMap.getOrDefault("SwapMutationNumberOfSwaps", 0.5).intValue()),
+                                        new ScrambleMutation(paramMap.getOrDefault("ScrambleMutationProbability", 0.5)) };
 
-        parentSelection = new Selection[] { new RankingSelectionSUS(paramMap.get("RankingSelectionSUSMatingPoolSize").intValue(), paramMap.get("RankingSelectionSUSs")),
-                                            new TournamentSelection(paramMap.get("TournamentSelectionMatingPoolSize").intValue(), paramMap.get("TournamentSelectionNumberOfParticipiants").intValue()),
-                                            new UniformParentSelection(paramMap.get("UniformParentSelectionMatingPoolSize").intValue())};
+        parentSelection = new Selection[] { new RankingSelectionSUS(paramMap.getOrDefault("RankingSelectionSUSMatingPoolSize", 6.0).intValue(), paramMap.getOrDefault("RankingSelectionSUSs", 1.5)),
+                                            new TournamentSelection(paramMap.getOrDefault("TournamentSelectionMatingPoolSize", 6.0).intValue(), paramMap.getOrDefault("TournamentSelectionNumberOfParticipiants", 0.5).intValue()),
+                                            new UniformParentSelection(paramMap.getOrDefault("UniformParentSelectionMatingPoolSize", 0.5).intValue())};
 
 	    exchange = new Exchange[] {  new ExchangeBest(),
                                      new ExchangeRandom(),
                                      new ExchangePickFromFittestHalf()};
 
-        parentSelectionMethod = paramMap.get("parentSelectionMethod").intValue();
-        crossoverMethod = paramMap.get("crossoverMethod").intValue();
-	mutationMethod = paramMap.get("mutationMethod").intValue();
-        exchangeMethod = paramMap.get("exchangeMethod").intValue();
+        parentSelectionMethod = paramMap.getOrDefault("parentSelectionMethod", 0.5).intValue();
+        crossoverMethod = paramMap.getOrDefault("crossoverMethod", 0.5).intValue();
+	    mutationMethod = paramMap.getOrDefault("mutationMethod", 0.5).intValue();
+        exchangeMethod = paramMap.getOrDefault("exchangeMethod", 0.5).intValue();
 
         
-	    selection = new RoundRobinSelection(paramMap.get("tournamentSurvivorSelectionSize").intValue());
+	    selection = new RoundRobinSelection(paramMap.getOrDefault("roundRobinTournamentSurvivorSelectionSize", 0.5).intValue());
 	
 	
         for(int i = 0; i< expectedPopulationSize; ++i){
@@ -97,16 +98,18 @@ public class Population {
         // parent selection
         Collections.sort(individuals);
 
-	    List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
-	
         // parent selection
-        Collections.sort(individuals);
+        List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 
-        //List<Individual> parents = individuals.subList(0, 2);
-        List<Individual> children = crossover[crossoverMethod].crossover(parents);
-        
+        // crossover
+        List<Individual> children = new ArrayList<>();
+        Collections.sort(matingPool);
+        for (int i = 0; i < matingPool.size(); i = i+2) {
+            children.addAll(crossover[crossoverMethod].crossover(matingPool.subList(i, i + 2)));
+        }
+
         // select random mutation
-        mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
+        mutations[mutationMethod].mutateIndividuals(children);
 	    individuals.addAll(children);
         // before selection update fitness values
         evaluatePopulation();
@@ -129,13 +132,14 @@ public class Population {
         List<Individual> leftIslandPopulation = new ArrayList<>();
         List<Individual> rightIslandPopulation = new ArrayList<>();
 
-        int exchangeRate = 100;
+
+        int migrationRate = paramMap.getOrDefault("migrationRate", 0.5).intValue();
 
 
-	// Many different islands, each its own operator/algortihm and see what happens? done, not very elegant though
-	List<String> islandAlgorithms = Arrays.asList("no_distinction", "ordered_distinction");
+        // Many different islands, each its own operator/algortihm and see what happens? done, not very elegant though
+        List<String> islandAlgorithms = Arrays.asList("no_distinction", "ordered_distinction");
 
-        String islandAlgorithm = islandAlgorithms.get(1);
+        String islandAlgorithm = islandAlgorithms.get(0);
 
         int[] parentSelectionMethodList = new int[islands];
         int[] crossoverMethodList = new int[islands];
@@ -169,9 +173,9 @@ public class Population {
             // How long should I evolve the islands?
             // When should I start with mutations?
             // Which indivuals to exchange, random/best, and how many? done
-            
-            int amountIndivExchange = 1; 
-            if (amountIndivExchange >= Math.round(subPopSize/2)) {
+
+            int migrationSize = paramMap.getOrDefault("migrationSize", 0.5).intValue();
+            if (migrationSize >= Math.round(subPopSize/2.0)) {
             	throw new IllegalArgumentException("Amount of individuals to exchange should be lower than half the population");
             }
 
@@ -189,7 +193,7 @@ public class Population {
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
-            if (generation % exchangeRate == 0) {
+            if (generation % migrationRate == 0) {
                 // get left and right subPopulations if considered a torus
 
                 int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
@@ -197,24 +201,21 @@ public class Population {
                 leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
                 rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
 
-		currentIslandPopulation = exchange[exchangeMethod].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, amountIndivExchange);
+	        	currentIslandPopulation = exchange[exchangeMethod].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, migrationSize);
                    
                 leftIslandPopulation.clear();
                 rightIslandPopulation.clear();
             }
 
-	    if (islandAlgorithm != "no_distinction"){
-                parentSelectionMethod = parentSelectionMethodList[currentIsland];
-		
-                crossoverMethod = crossoverMethodList[currentIsland];
-                mutationMethod = mutationMethodList[currentIsland];
-            } else {
-                parentSelectionMethod = paramMap.get("parentSelectionMethod").intValue();
-        	crossoverMethod = paramMap.get("crossoverMethod").intValue();
-	    	mutationMethod = paramMap.get("mutationMethod").intValue();
-            }
-	    //parentSelectionMethod 0 does not work yet:
-	    //parentSelectionMethod = 1;
+	    if (!islandAlgorithm.equals("no_distinction")){
+            parentSelectionMethod = parentSelectionMethodList[currentIsland];
+            crossoverMethod = crossoverMethodList[currentIsland];
+            mutationMethod = mutationMethodList[currentIsland];
+        } else {
+            parentSelectionMethod = paramMap.getOrDefault("parentSelectionMethod", 0.5).intValue();
+        	crossoverMethod = paramMap.getOrDefault("crossoverMethod", 0.5).intValue();
+	    	mutationMethod = paramMap.getOrDefault("mutationMethod", 0.5).intValue();
+        }
 
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
