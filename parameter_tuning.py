@@ -20,7 +20,7 @@ import timeit
 
 parameter_dict = {
     "parentSelectionMethod": 1,
-    "crossoverMethod": 2,
+    "crossoverMethod": 4,
     "mutationMethod": 1,
     "exchangeMethod": 0
 }
@@ -34,15 +34,15 @@ step = 0.2
 print("{} %".format(int(prev_percent)))
 with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
     for evaluation in ["SchaffersEvaluation", "KatsuuraEvaluation"]:
-        for subPopulationSize in range(10, 40, 5):
-            for numberOfIslands in range(3, 20, 5):
-                for migrationSize in range(2, 6, 2):
-                    for migrationInterval in range(25, 150, 30):
+        for subPopulationSize in range(20, 21, 10):
+            for numberOfIslands in range(5, 6, 6):
+                for migrationSize in range(2, 3, 2):
+                    for migrationInterval in range(100, 101, 50):
                         for TournamentSelectionMatingPoolSize in range(2, 7, 2):
-                            for TournamentSelectionNumberOfParticipiants in range(1, 7):
-                                for UniformMutationProbability in np.arange(0.25, 0.81, step):
-                                    for UniformMutationSpeed in np.arange(0.5, 2.01, step):
-                                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 5):
+                            for TournamentSelectionNumberOfParticipiants in range(1, 7, 2):
+                                for UniformMutationProbability in np.arange(0.5, 0.81, step):
+                                    for UniformMutationSpeed in np.arange(1.7, 2.01, step):
+                                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 10):
                                             parameter_dict["subPopulationSize"] = subPopulationSize
                                             parameter_dict["numberOfIslands"] = numberOfIslands
                                             parameter_dict["migrationSize"] = migrationSize
@@ -74,7 +74,7 @@ with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
                                                     json.dump(parameter_dict, outfile)
                                                     outfile.write('\n')
                                             counter += 1
-                                            percent = counter/725760.0*100
+                                            percent = counter/144.0*100
                                             if int(percent) > prev_percent:
                                                 prev_percent = int(percent)
                                                 print("{} %".format(int(prev_percent)))
