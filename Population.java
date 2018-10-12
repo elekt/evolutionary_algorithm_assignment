@@ -224,7 +224,7 @@ public class Population {
 
 	    //System.out.println(currentIslandPopulation.size());
             // parent selection
-            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
 
 //            System.out.println("this is the matingpool");
 //            int n = 0;
