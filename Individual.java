@@ -81,4 +81,12 @@ public class Individual implements Comparable<Individual>{
     return subPopulation;
     }
 
+    public void showGenome() {
+        System.out.println("GENOME:");
+        for (int i = 0; i < 10; i++) {
+            System.out.println(genome[i]);
+        }
+        System.out.println();
+    }
+
 }

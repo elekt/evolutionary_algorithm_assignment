@@ -37,7 +37,8 @@ public class Population {
         crossover = new Crossover[] {  new OnePointCrossover(),
                                         new TwoPointCrossover(),
                                         new UniformCrossover(),
-                                        new BlendCrossover()};
+                                        new BlendCrossover(),
+                                        new WholeArithmeticCrossover(0.5)};
 
         mutations = new Mutation[] {    new InversionMutation(paramMap.getOrDefault("InversionMutationProbability, 0.5", 0.5)),
                                         new UniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5), paramMap.getOrDefault("SimpleMutationSpeed", 0.5), evalsLimit),
@@ -99,6 +100,8 @@ public class Population {
 
         // parent selection
         List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+
+
 
         // crossover
         List<Individual> children = new ArrayList<>();
@@ -222,6 +225,14 @@ public class Population {
 	    //System.out.println(currentIslandPopulation.size());
             // parent selection
             List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+
+//            System.out.println("this is the matingpool");
+//            int n = 0;
+//            for (Individual parent : matingPool) {
+//                System.out.println("parent" + n);
+//                parent.showGenome();
+//                n++;
+//            }
 
             // crossover
             List<Individual> children = new ArrayList<>();
