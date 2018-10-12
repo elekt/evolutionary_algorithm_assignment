@@ -1,10 +1,8 @@
 import subprocess
 import numpy as np
-
-
-
-
-
+import json
+import time
+import timeit
 
 # - sub Populations Size (10 - 30)
 # - Nr. of islands  (10 - 20)
@@ -19,30 +17,69 @@ import numpy as np
 # "UniformMutationSpeed: 0.0 - 2.5
 # roundRobinroundRobinTournamentSurvivorSelectionSize 3 - 8
 
-parentSelectionMethod = 1
-crossoverMethod = 2
-mutationMethod = 1
-exchangeMethod = 0
 
+parameter_dict = {
+    "parentSelectionMethod": 1,
+    "crossoverMethod": 2,
+    "mutationMethod": 1,
+    "exchangeMethod": 0
+}
+
+
+start = timeit.default_timer()
 
 counter = 0
+prev_percent = 0
 step = 0.2
-for evaluation in ["SchaffersEvaluation", "BentCigarFunction", "KatsuuraEvaluation"]:
-    for subPopulationSize in range(10, 40, 5):
-        for numberOfIslands in range(3, 20, 5):
-            for migrationSize in range(2, 6, 2):
-                for migrationInterval in range(25, 150, 30):
-                    for TournamentSelectionMatingPoolSize in range(2, 7, 2):
-                        for TournamentSelectionNumberOfParticipiants in range(1, 7):
-                            for UniformMutationProbability in np.arange(0.25, 0.81, step):
-                                for UniformMutationSpeed in np.arange(0.5, 2.01, step):
-                                    for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 5):
-                                        # params = f"subPopulationSize:{subPopulationSize},numberOfIslands:{numberOfIslands},migrationSize:{migrationSize},migrationInterval:{migrationInterval}," \
-                                        #          f"UniformMutationProbability:{UniformMutationProbability},UniformMutationSpeed:{UniformMutationSpeed},TournamentSelectionMatingPoolSize:{TournamentSelectionMatingPoolSize},TournamentSelectionNumberOfParticipiants:{TournamentSelectionNumberOfParticipiants}," \
-                                        #          f"parentSelectionMethod:{parentSelectionMethod},crossoverMethod:{crossoverMethod},mutationMethod:{mutationMethod},exchangeMethod:{exchangeMethod},roundRobinroundRobinTournamentSurvivorSelectionSize:{roundRobinroundRobinTournamentSurvivorSelectionSize}"
-                                        # result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
-                                        # print(result)
-                                        counter += 1
+print("{} %".format(int(prev_percent)))
+with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
+    for evaluation in ["SchaffersEvaluation", "KatsuuraEvaluation"]:
+        for subPopulationSize in range(10, 40, 5):
+            for numberOfIslands in range(3, 20, 5):
+                for migrationSize in range(2, 6, 2):
+                    for migrationInterval in range(25, 150, 30):
+                        for TournamentSelectionMatingPoolSize in range(2, 7, 2):
+                            for TournamentSelectionNumberOfParticipiants in range(1, 7):
+                                for UniformMutationProbability in np.arange(0.25, 0.81, step):
+                                    for UniformMutationSpeed in np.arange(0.5, 2.01, step):
+                                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 5):
+                                            parameter_dict["subPopulationSize"] = subPopulationSize
+                                            parameter_dict["numberOfIslands"] = numberOfIslands
+                                            parameter_dict["migrationSize"] = migrationSize
+                                            parameter_dict["migrationInterval"] = migrationInterval
+                                            parameter_dict["UniformMutationProbability"] = UniformMutationProbability
+                                            parameter_dict["UniformMutationSpeed"] = UniformMutationSpeed
+                                            parameter_dict["TournamentSelectionMatingPoolSize"] = TournamentSelectionMatingPoolSize
+                                            parameter_dict["TournamentSelectionNumberOfParticipiants"] = TournamentSelectionNumberOfParticipiants
+                                            parameter_dict["roundRobinroundRobinTournamentSurvivorSelectionSize"] = roundRobinroundRobinTournamentSurvivorSelectionSize
+
+                                            params = f"subPopulationSize:{parameter_dict['subPopulationSize']}," \
+                                                     f"numberOfIslands:{parameter_dict['numberOfIslands']}," \
+                                                     f"migrationSize:{parameter_dict['migrationSize']}," \
+                                                     f"migrationInterval:{parameter_dict['migrationInterval']}," \
+                                                     f"UniformMutationProbability:{parameter_dict['UniformMutationProbability']}," \
+                                                     f"UniformMutationSpeed:{parameter_dict['UniformMutationSpeed']}," \
+                                                     f"TournamentSelectionMatingPoolSize:{parameter_dict['TournamentSelectionMatingPoolSize']}," \
+                                                     f"TournamentSelectionNumberOfParticipiants:{parameter_dict['TournamentSelectionNumberOfParticipiants']}," \
+                                                     f"parentSelectionMethod:{parameter_dict['parentSelectionMethod']}," \
+                                                     f"crossoverMethod:{parameter_dict['crossoverMethod']}," \
+                                                     f"mutationMethod:{parameter_dict['mutationMethod']}," \
+                                                     f"exchangeMethod:{parameter_dict['exchangeMethod']}," \
+                                                     f"roundRobinroundRobinTournamentSurvivorSelectionSize:{parameter_dict['roundRobinroundRobinTournamentSurvivorSelectionSize']}"
+                                            result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                                            for line in result.decode().splitlines():
+                                                if line.startswith("Best Score:"):
+                                                    score = line.split(":")[1]
+                                                    parameter_dict["score"] = score
+                                                    json.dump(parameter_dict, outfile)
+                                                    outfile.write('\n')
+                                            counter += 1
+                                            percent = counter/725760.0*100
+                                            if int(percent) > prev_percent:
+                                                prev_percent = int(percent)
+                                                print("{} %".format(int(prev_percent)))
 
 
-print(counter)
+stop = timeit.default_timer()
+
+print('Runime: {} sec'.format(stop - start))
