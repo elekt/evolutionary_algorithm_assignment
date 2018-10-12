@@ -14,6 +14,7 @@ public class player2 implements ContestSubmission
 	private Population population;
     private int islands;
     private int popSize;
+    private int subPop;
 
     public player2()
 	{
@@ -42,10 +43,17 @@ public class player2 implements ContestSubmission
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
-		// Do sth with property values, e.g. specify relevant settings of your algorithm
+
+
+        popSize = getAlgorithmParams().get("populationSize").intValue();
+        islands = getAlgorithmParams().get("numberOfIslands").intValue();
+
+
+        // Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
             islands = 10;
-            popSize = 200;
+            subPop = 20;
+            popSize = islands * subPop;
         }else{
             islands = 1;
             popSize = 20;
