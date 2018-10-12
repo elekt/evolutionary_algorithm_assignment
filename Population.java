@@ -52,12 +52,11 @@ public class Population {
                                      new ExchangeRandom(),
                                      new ExchangePickFromFittestHalf()};
 
-        parentSelectionMethod = paramMap.getOrDefault("parentSelectionMethod", 0.5).intValue();
-        crossoverMethod = paramMap.getOrDefault("crossoverMethod", 0.5).intValue();
-	    mutationMethod = paramMap.getOrDefault("mutationMethod", 0.5).intValue();
-        exchangeMethod = paramMap.getOrDefault("exchangeMethod", 0.5).intValue();
+        parentSelectionMethod = paramMap.get("parentSelectionMethod").intValue();
+        crossoverMethod = paramMap.get("crossoverMethod").intValue();
+	    mutationMethod = paramMap.get("mutationMethod").intValue();
+        exchangeMethod = paramMap.get("exchangeMethod").intValue();
 
-        
 	    selection = new RoundRobinSelection(paramMap.getOrDefault("roundRobinTournamentSurvivorSelectionSize", 0.5).intValue());
 	
 	
@@ -133,7 +132,7 @@ public class Population {
         List<Individual> rightIslandPopulation = new ArrayList<>();
 
 
-        int migrationRate = paramMap.getOrDefault("migrationRate", 0.5).intValue();
+        int migrationInterval = paramMap.get("migrationInterval").intValue();
 
 
         // Many different islands, each its own operator/algortihm and see what happens? done, not very elegant though
@@ -193,7 +192,7 @@ public class Population {
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
-            if (generation % migrationRate == 0) {
+            if (generation % migrationInterval == 0) {
                 // get left and right subPopulations if considered a torus
 
                 int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
@@ -221,8 +220,15 @@ public class Population {
             Collections.sort(currentIslandPopulation);
 
 	    //System.out.println(currentIslandPopulation.size());
-            List<Individual> parents = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
-            List<Individual> children = crossover[crossoverMethod].crossover(parents);
+            // parent selection
+            List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+
+            // crossover
+            List<Individual> children = new ArrayList<>();
+            Collections.sort(matingPool);
+            for (int i = 0; i < matingPool.size(); i = i+2) {
+                children.addAll(crossover[crossoverMethod].crossover(matingPool.subList(i, i + 2)));
+            }
 
             //children.addAll(crossover.crossover(parents));
 

@@ -26,31 +26,23 @@ exchangeMethod = 0
 
 
 counter = 0
-step = 0.05
-# global counter
-# global step
-
-# params = "InversionMutationProbability:{},SimpleMutationProbability:{},SimpleMutationSpeed:{},SwapMutationProbability:{},SwapMutationNumberOfSwaps:{},ScrambleMutationProbability:{},RankingSelectionSUSMatingPoolSize:{},RankingSelectionSUSs:{},TournamentSelectionMatingPoolSize:{},TournamentSelectionNumberOfParticipiants:{},UniformParentSelectionMatingPoolSize:{},parentSelectionMethod:{},crossoverMethod:{},mutationMethod:{},exchangeMethod:{}".format(InversionMutationProbability,SimpleMutationProbability,SimpleMutationSpeed,SwapMutationProbability,SwapMutationNumberOfSwaps,ScrambleMutationProbability,RankingSelectionSUSMatingPoolSize,RankingSelectionSUSs,TournamentSelectionMatingPoolSize,TournamentSelectionNumberOfParticipiants,UniformParentSelectionMatingPoolSize,parentSelectionMethod,crossoverMethod,mutationMethod,exchangeMethod)
-# result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
-# print(params)
-# print(result)
-
+step = 0.2
 for evaluation in ["SchaffersEvaluation", "BentCigarFunction", "KatsuuraEvaluation"]:
-    for subPopulationSize in range(10, 30):
-        for numberOfIslands in range(5, 20):
-            for migrationSize in range(2, 5):
-                for migrationInterval in range(25, 150):
-                    for TournamentSelectionMatingPoolSize in range(2, 9, 2):
-                        for TournamentSelectionNumberOfParticipiants in range(1, 9):
-                            for UniformMutationProbability in np.arange(0.0, 1.01, step):
-                                for UniformMutationSpeed in np.arange(0.0, 2.51, step):
+    for subPopulationSize in range(10, 40, 5):
+        for numberOfIslands in range(3, 20, 5):
+            for migrationSize in range(2, 6, 2):
+                for migrationInterval in range(25, 150, 30):
+                    for TournamentSelectionMatingPoolSize in range(2, 7, 2):
+                        for TournamentSelectionNumberOfParticipiants in range(1, 7):
+                            for UniformMutationProbability in np.arange(0.25, 0.81, step):
+                                for UniformMutationSpeed in np.arange(0.5, 2.01, step):
                                     for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 5):
-                                        params = f"subPopulationSize:{subPopulationSize},numberOfIslands:{numberOfIslands},migrationSize:{migrationSize}," \
-                                                 f"UniformMutationProbability:{UniformMutationProbability},UniformMutationSpeed:{UniformMutationSpeed},TournamentSelectionMatingPoolSize:{TournamentSelectionMatingPoolSize},TournamentSelectionNumberOfParticipiants:{TournamentSelectionNumberOfParticipiants}," \
-                                                 f"parentSelectionMethod:{parentSelectionMethod},crossoverMethod:{crossoverMethod},mutationMethod:{mutationMethod},exchangeMethod:{exchangeMethod},roundRobinroundRobinTournamentSurvivorSelectionSize:{roundRobinroundRobinTournamentSurvivorSelectionSize}"
-                                        result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
-                                        print(params)
-                                        print(result)
+                                        # params = f"subPopulationSize:{subPopulationSize},numberOfIslands:{numberOfIslands},migrationSize:{migrationSize},migrationInterval:{migrationInterval}," \
+                                        #          f"UniformMutationProbability:{UniformMutationProbability},UniformMutationSpeed:{UniformMutationSpeed},TournamentSelectionMatingPoolSize:{TournamentSelectionMatingPoolSize},TournamentSelectionNumberOfParticipiants:{TournamentSelectionNumberOfParticipiants}," \
+                                        #          f"parentSelectionMethod:{parentSelectionMethod},crossoverMethod:{crossoverMethod},mutationMethod:{mutationMethod},exchangeMethod:{exchangeMethod},roundRobinroundRobinTournamentSurvivorSelectionSize:{roundRobinroundRobinTournamentSurvivorSelectionSize}"
+                                        # result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                                        # print(result)
+                                        counter += 1
 
 
 print(counter)
