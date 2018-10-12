@@ -3,6 +3,7 @@ import numpy as np
 import json
 import time
 import timeit
+import os
 
 # - sub Populations Size (10 - 30)
 # - Nr. of islands  (10 - 20)
@@ -27,6 +28,8 @@ parameter_dict = {
 
 
 start = timeit.default_timer()
+
+
 
 counter = 0
 prev_percent = 0
@@ -66,7 +69,7 @@ with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
                                                      f"mutationMethod:{parameter_dict['mutationMethod']}," \
                                                      f"exchangeMethod:{parameter_dict['exchangeMethod']}," \
                                                      f"roundRobinroundRobinTournamentSurvivorSelectionSize:{parameter_dict['roundRobinroundRobinTournamentSurvivorSelectionSize']}"
-                                            result = subprocess.check_output(['/home/redmachine/Desktop/Uva-DataScience/EvolutionaryComputing/assignmentfiles_2017/build_run_for_params.sh', params, evaluation])
+                                            result = subprocess.check_output(['./build_run_for_params.sh', params, evaluation])
                                             for line in result.decode().splitlines():
                                                 if line.startswith("Best Score:"):
                                                     score = line.split(":")[1]
