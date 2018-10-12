@@ -43,21 +43,14 @@ public class player2 implements ContestSubmission
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
-
-
-        popSize = getAlgorithmParams().get("populationSize").intValue();
+        subPop = getAlgorithmParams().get("subPopulationSize").intValue();
         islands = getAlgorithmParams().get("numberOfIslands").intValue();
-
-
         // Do sth with property values, e.g. specify relevant settings of your algorithm
-        if(isMultimodal){
-            islands = 10;
-            subPop = 20;
-            popSize = islands * subPop;
-        }else{
+        if(!isMultimodal){
             islands = 1;
-            popSize = 20;
         }
+
+        popSize = islands * subPop;
     }
     
 	public void run()
