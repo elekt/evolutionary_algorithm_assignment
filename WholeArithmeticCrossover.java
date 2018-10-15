@@ -25,7 +25,6 @@ public class WholeArithmeticCrossover implements Crossover {
             child2[i] = alpha * parents.get(1).getGenome()[i] + (1 - alpha) * parents.get(0).getGenome()[i];
 
         }
-
             List<Individual> offspring = new ArrayList<>();
             offspring.add(new Individual(child1));
             offspring.add(new Individual(child2));
