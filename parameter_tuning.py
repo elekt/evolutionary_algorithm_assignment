@@ -26,10 +26,7 @@ parameter_dict = {
     "exchangeMethod": 0
 }
 
-
 start = timeit.default_timer()
-
-
 
 counter = 0
 prev_percent = 0
@@ -45,16 +42,21 @@ with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
                             for TournamentSelectionNumberOfParticipiants in range(1, 7, 2):
                                 for UniformMutationProbability in np.arange(0.5, 0.81, step):
                                     for UniformMutationSpeed in np.arange(1.7, 2.01, step):
-                                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize, 10):
+                                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5,
+                                                                                                         subPopulationSize,
+                                                                                                         10):
                                             parameter_dict["subPopulationSize"] = subPopulationSize
                                             parameter_dict["numberOfIslands"] = numberOfIslands
                                             parameter_dict["migrationSize"] = migrationSize
                                             parameter_dict["migrationInterval"] = migrationInterval
                                             parameter_dict["UniformMutationProbability"] = UniformMutationProbability
                                             parameter_dict["UniformMutationSpeed"] = UniformMutationSpeed
-                                            parameter_dict["TournamentSelectionMatingPoolSize"] = TournamentSelectionMatingPoolSize
-                                            parameter_dict["TournamentSelectionNumberOfParticipiants"] = TournamentSelectionNumberOfParticipiants
-                                            parameter_dict["roundRobinroundRobinTournamentSurvivorSelectionSize"] = roundRobinroundRobinTournamentSurvivorSelectionSize
+                                            parameter_dict[
+                                                "TournamentSelectionMatingPoolSize"] = TournamentSelectionMatingPoolSize
+                                            parameter_dict[
+                                                "TournamentSelectionNumberOfParticipiants"] = TournamentSelectionNumberOfParticipiants
+                                            parameter_dict[
+                                                "roundRobinroundRobinTournamentSurvivorSelectionSize"] = roundRobinroundRobinTournamentSurvivorSelectionSize
 
                                             params = f"subPopulationSize:{parameter_dict['subPopulationSize']}," \
                                                      f"numberOfIslands:{parameter_dict['numberOfIslands']}," \
@@ -69,7 +71,8 @@ with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
                                                      f"mutationMethod:{parameter_dict['mutationMethod']}," \
                                                      f"exchangeMethod:{parameter_dict['exchangeMethod']}," \
                                                      f"roundRobinroundRobinTournamentSurvivorSelectionSize:{parameter_dict['roundRobinroundRobinTournamentSurvivorSelectionSize']}"
-                                            result = subprocess.check_output(['./build_run_for_params.sh', params, evaluation])
+                                            result = subprocess.check_output(
+                                                ['./build_run_for_params.sh', params, evaluation])
                                             for line in result.decode().splitlines():
                                                 if line.startswith("Best Score:"):
                                                     score = line.split(":")[1]
@@ -77,11 +80,10 @@ with open("paramters{}.jl".format(int(time.time())), "w") as outfile:
                                                     json.dump(parameter_dict, outfile)
                                                     outfile.write('\n')
                                             counter += 1
-                                            percent = counter/144.0*100
+                                            percent = counter / 144.0 * 100
                                             if int(percent) > prev_percent:
                                                 prev_percent = int(percent)
                                                 print("{} %".format(int(prev_percent)))
-
 
 stop = timeit.default_timer()
 
