@@ -61,7 +61,8 @@ public class player2 implements ContestSubmission
 
         // init population
         population = new Population(popSize, rnd, evaluation, islands, paramMap);
-
+	double diversity = 0.0;
+	int diversity_count = 0;
         while(population.getEvaluationCount() < evaluations_limit){
             // Select parents
             double currentFitness = population.evaluatePopulation();
@@ -85,8 +86,14 @@ public class player2 implements ContestSubmission
 //                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
 //                System.out.print("Score: ");
 //                System.out.println(currentFitness);
+		diversity += population.getDiversity();
+		diversity_count += 1;
             }
 		}
+		System.out.print("Final Diversity: ");
+		System.out.println(population.getDiversity());
+		System.out.print("Mean Diversity: ");
+		System.out.println(diversity/diversity_count);
 		System.out.print("Best ");
 	}
 
