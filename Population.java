@@ -304,6 +304,20 @@ public class Population {
 
         return ret;
     }
+    public double getDiversity() {
+	double maxFitness = 0.0;
+	double score = 0.0;
+	Individual fittest = getFittest();
+	double[] fittestGenome = fittest.getGenome();
+	double[] compareGenome;
+	for (Individual individual : individuals) {
+	    compareGenome = individual.getGenome();
+		for(int i=0; i<10; ++i){
+		    score += Math.abs(compareGenome[i] - fittestGenome[i]);
+		} 
+        }
+        return (score/getPopulationSize());
+	}
     
      public int getEvaluationCount() {		
          return evals;		
