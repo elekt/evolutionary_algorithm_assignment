@@ -1,9 +1,8 @@
-import subprocess
 import numpy as np
-import json
 import time
 import timeit
-import os
+import subprocess
+import json
 
 parameter_dict = {
     "parentSelectionMethod": 1,
@@ -13,22 +12,24 @@ parameter_dict = {
 }
 
 start = timeit.default_timer()
-for i in range(0, 20):
+
+for i in range(0, 9):
     counter = 0
     prev_percent = 0
+    step = 0.15
+    evaluation = "SchaffersEvaluation"
     print("{} %".format(int(prev_percent)))
-    with open("new_params{}.jl".format(int(time.time())), "w") as outfile:
-        for evaluation in ["SchaffersEvaluation"]:
-            for subPopulationSize in range(20, 101, 20):
-                for numberOfIslands in [3, 5, 10, 20]:
-                    for migrationSize in range(2, 6):
-                        for migrationInterval in [50, 100, 150]:
-                            TournamentSelectionMatingPoolSize = 2
-                            TournamentSelectionNumberOfParticipiants = 3
-                            UniformMutationProbability = 0.5
-                            UniformMutationSpeed = 1.9
-                            roundRobinroundRobinTournamentSurvivorSelectionSize = 10
+    with open("schaffers_params{}.jl".format(int(time.time())), "w") as outfile:
+subPopulationSize = 20
+numberOfIslands = 5
+migrationSize = 2
+migrationInterval = 100
 
+for TournamentSelectionMatingPoolSize in range(2, 5, 2):
+for TournamentSelectionNumberOfParticipiants in range(5, 16, 2):
+for UniformMutationProbability in np.arange(0.2, 0.76, step):
+for UniformMutationSpeed in np.arange(0.6, 2.51, step):
+                        for roundRobinroundRobinTournamentSurvivorSelectionSize in range(5, subPopulationSize+1, 5):
                             parameter_dict["subPopulationSize"] = subPopulationSize
                             parameter_dict["numberOfIslands"] = numberOfIslands
                             parameter_dict["migrationSize"] = migrationSize
@@ -54,26 +55,26 @@ for i in range(0, 20):
                                      f"exchangeMethod:{parameter_dict['exchangeMethod']}," \
                                      f"roundRobinroundRobinTournamentSurvivorSelectionSize:{parameter_dict['roundRobinroundRobinTournamentSurvivorSelectionSize']}"
                             result = subprocess.check_output(['./build_run_for_params.sh', params, evaluation])
+                            print(result)
                             score = 0
                             runtime = 0
                             for line in result.decode().splitlines():
                                 if line.startswith("Best Score:"):
                                     score = line.split(":")[1]
-                                    print("BAH+")
                                 if line.startswith("Runtime:"):
                                     runtime = line.split(":")[1].replace("ms", "")
 
-                            print(result)
                             parameter_dict["score"] = score
                             parameter_dict["runtime"] = runtime
                             json.dump(parameter_dict, outfile)
                             outfile.write('\n')
                             counter += 1
-                            percent = counter / 480.0 * 100
+                            percent = counter / 2496.0 * 100
                             if int(percent) > prev_percent:
                                 prev_percent = int(percent)
                                 print("{} %".format(int(prev_percent)))
 
 stop = timeit.default_timer()
 
+print(counter)
 print('Runime: {} sec'.format(stop - start))
