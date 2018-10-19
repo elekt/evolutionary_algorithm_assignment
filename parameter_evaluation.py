@@ -2,6 +2,7 @@ import os
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+# from scikit import stats
 
 files = os.listdir(os.getcwd())
 
@@ -25,14 +26,12 @@ for item in files:
 
 for (k, v) in scores.items():
     means_scores[k] = np.mean(v)
-
-print(line_number)
-
-# plt.bar(range(len(means_scores)), means_scores.values(), align='center')
-# plt.xticks(range(len(means_scores)), means_scores.keys())
-# plt.show()
+    # print(stats.wilcoxon())
+plt.bar(range(len(means_scores)), means_scores.values(), align='center')
+plt.xticks(range(len(means_scores)), means_scores.keys())
+plt.show()
 
 
 for k, v in means_scores.items():
-    if means_scores[k] > 1:
-        print("{}\n{}\n{}\n{}\n".format(params_array[k], scores[k], scores[k+72], "{}/{}".format(means_scores[k], means_scores[k+72])))
+    if means_scores[k] > 8.5:
+        print("{}\n{}\n{}\n".format(params_array[k], scores[k], means_scores[k]))
