@@ -59,7 +59,8 @@ for i in range(0, 20):
                             intermediate_scores = []
                             final_diversity = 0
                             mean_diversity = 0
-                            for line in result.decode().splitlines():
+                            lines = result.decode().splitlines()
+                            for line in lines:
                                 if line.startswith("Best Score:"):
                                     score = line.split(":")[1]
                                 if line.startswith("Runtime:"):
@@ -71,7 +72,7 @@ for i in range(0, 20):
                                 if line.startswith("Mean Diversity:"):
                                     mean_diversity = line.split(":")[1].strip()
 
-                            print(result)
+                            print(lines[-2:])
                             parameter_dict["score"] = score
                             parameter_dict["runtime"] = runtime
                             parameter_dict["intermediate_scores"] = intermediate_scores
