@@ -44,7 +44,7 @@ public class Population {
                                         new WholeArithmeticCrossover(0.5)};
 
         mutations = new Mutation[] {    new InversionMutation(paramMap.getOrDefault("InversionMutationProbability, 0.5", 0.5)),
-                                        new UniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5), paramMap.getOrDefault("SimpleMutationSpeed", 0.5), evalsLimit),
+                                        new UniformMutation(paramMap.getOrDefault("UniformMutationProbability", 0.5), paramMap.getOrDefault("UniformMutationSpeed", 0.5), evalsLimit),
                                         new NonUniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5)),
                                         new SwapMutation(paramMap.getOrDefault("SwapMutationProbability", 0.5), paramMap.getOrDefault("SwapMutationNumberOfSwaps", 0.5).intValue()),
                                         new ScrambleMutation(paramMap.getOrDefault("ScrambleMutationProbability", 0.5)) };
