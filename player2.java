@@ -69,8 +69,8 @@ public class player2 implements ContestSubmission
         while(!isFinished && population.getEvaluationCount() < evaluations_limit){
             double currentFitness = population.evaluatePopulation();
 
-            if(generation > 1000 && generation % 500 == 0) {
-                if(Math.abs(currentFitness - lastFitness) < 0.0001) {
+            if(generation > 2000 && generation % 500 == 0) {
+                if(Math.abs(currentFitness - lastFitness) < 0.00001) {
                     System.out.print("Terminate at ");
                     System.out.println(generation);
                     lastFitness = currentFitness;

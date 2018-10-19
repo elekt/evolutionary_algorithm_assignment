@@ -21,6 +21,7 @@ public class Population {
     private Exchange[] exchange;
     private Map<String, Double> paramMap;
     private Crowding crowding;
+    private boolean isCrowding;
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands, Map<String, Double> _paramMap) {
         expectedPopulationSize = _size;
@@ -32,6 +33,8 @@ public class Population {
         Properties props = evaluation.getProperties();
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
+
+        isCrowding = paramMap.get("crowding") == 1;
 
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
         crossover = new Crossover[] {  new OnePointCrossover(),
@@ -115,13 +118,17 @@ public class Population {
         for (int i = 0; i < matingPool.size(); i = i+2) {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
+            mutations[mutationMethod].mutateIndividuals(children);
 
             // CROWDING STUFF
-            individuals.removeAll(parents);
-            mutations[mutationMethod].mutateIndividuals(children);
-            evaluateIndividuals(children);
-            List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
-            individuals.addAll(crowdedIndividuals);
+            if(isCrowding) {
+                individuals.removeAll(parents);
+                evaluateIndividuals(children);
+                List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
+                individuals.addAll(crowdedIndividuals);
+            } else {
+                individuals.addAll(children);
+            }
         }
 
         // before selection update fitness values
