@@ -42,6 +42,7 @@ public class Population {
 
         mutations = new Mutation[] {    new InversionMutation(paramMap.getOrDefault("InversionMutationProbability, 0.5", 0.5)),
                                         new UniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5), paramMap.getOrDefault("SimpleMutationSpeed", 0.5), evalsLimit),
+                                        new NonUniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5)),
                                         new SwapMutation(paramMap.getOrDefault("SwapMutationProbability", 0.5), paramMap.getOrDefault("SwapMutationNumberOfSwaps", 0.5).intValue()),
                                         new ScrambleMutation(paramMap.getOrDefault("ScrambleMutationProbability", 0.5)) };
 
@@ -144,7 +145,6 @@ public class Population {
         List<Individual> leftIslandPopulation = new ArrayList<>();
         List<Individual> rightIslandPopulation = new ArrayList<>();
 
-
         int migrationInterval = paramMap.get("migrationInterval").intValue();
 
 
@@ -159,9 +159,9 @@ public class Population {
 
        if (islandAlgorithm == "ordered_distinction"){
             int count = 0;
-	    int parentSelectionCount = 0;
-	    int crossoverCount = 0;
-	    int mutationCount = 0;
+            int parentSelectionCount = 0;
+            int crossoverCount = 0;
+            int mutationCount = 0;
             while (count < islands) { 
 		if (count % (crossover.length * mutations.length) == 0) {
 		    parentSelectionCount = (parentSelectionCount + 1 ) % parentSelection.length;

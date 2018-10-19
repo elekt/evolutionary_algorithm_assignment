@@ -18,16 +18,15 @@ public class player2 implements ContestSubmission
     private boolean isMultimodal;
     private boolean hasStructure;
     private boolean isSeparable;
+    private double lastFitness = 0.0;
 
     public player2()
 	{
 		rnd = new Random();
 	}
 	
-	public void setSeed(long seed)
-	{
-		// Set seed of algortihms random process
-		rnd.setSeed(seed);
+	public void setSeed(long seed) {
+        // no seed
 	}
 
 	public void setEvaluation(ContestEvaluation evaluation)
@@ -57,8 +56,7 @@ public class player2 implements ContestSubmission
         popSize = islands * subPop;
     }
     
-	public void run()
-	{
+	public void run() {
 		int generation = 0;
 
         Map<String, Double> paramMap = getAlgorithmParams();
@@ -67,9 +65,18 @@ public class player2 implements ContestSubmission
         population = new Population(popSize, rnd, evaluation, islands, paramMap);
         double diversity = 0.0;
         int diversity_count = 0;
-        while(population.getEvaluationCount() < evaluations_limit){
-            // Select parents
+        boolean isFinished = false;
+        while(!isFinished && population.getEvaluationCount() < evaluations_limit){
             double currentFitness = population.evaluatePopulation();
+
+            if(generation > 1000 && generation % 500 == 0) {
+                if(Math.abs(currentFitness - lastFitness) < 0.0001) {
+                    System.out.print("Terminate at ");
+                    System.out.println(generation);
+                    lastFitness = currentFitness;
+                    isFinished = true;
+                }
+            }
 
             try {
                 if (islands > 1){
@@ -83,20 +90,19 @@ public class player2 implements ContestSubmission
             }
             generation += 1;
 
-            if (isMultimodal == true && hasStructure == false){
-		if(generation % 1000 == 0) {
-		    System.out.print("Score: ");
+            if (isMultimodal && !hasStructure){
+                if(generation % 1000 == 0) {
+                    System.out.print("Score: ");
                     System.out.println(population.getFittest().getFitness());
-		    diversity += population.getDiversity();
-		    diversity_count += 1;
+                    diversity += population.getDiversity();
+                    diversity_count += 1;
                 }
-            }
-            else {
+            } else {
                  if(generation % 100 == 0) {
-		    System.out.print("Score: ");
-            System.out.println(population.getFittest().getFitness());
-		    diversity += population.getDiversity();
-		    diversity_count += 1;
+                     System.out.print("Score: ");
+                    System.out.println(population.getFittest().getFitness());
+                    diversity += population.getDiversity();
+                    diversity_count += 1;
                 }
             }
 		}
