@@ -15,6 +15,9 @@ public class player2 implements ContestSubmission
     private int islands;
     private int popSize;
     private int subPop;
+    private boolean isMultimodal;
+    private boolean hasStructure;
+    private boolean isSeparable;
 
     public player2()
 	{
@@ -67,8 +70,7 @@ public class player2 implements ContestSubmission
         while(population.getEvaluationCount() < evaluations_limit){
             // Select parents
             double currentFitness = population.evaluatePopulation();
-            System.out.print("Score: ");
-            System.out.println(currentFitness);
+
             try {
                 if (islands > 1){
                     population.nextGenerationIslands(generation);
@@ -81,16 +83,21 @@ public class player2 implements ContestSubmission
             }
             generation += 1;
 
-            if(generation % 100 == 0) {
-//                System.out.print("Generation: ");
-//                System.out.print(generation);
-//                System.out.print(", Score: ");
-//                System.out.println(population.getFittest().getFitness());
-//                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-//                System.out.print("Score: ");
-//                System.out.println(currentFitness);
-                diversity += population.getDiversity();
-                diversity_count += 1;
+            if (isMultimodal == true && hasStructure == false){
+		if(generation % 1000 == 0) {
+		    System.out.print("Score: ");
+                    System.out.println(population.getFittest().getFitness());
+		    diversity += population.getDiversity();
+		    diversity_count += 1;
+                }
+            }
+            else {
+                 if(generation % 100 == 0) {
+		    System.out.print("Score: ");
+                    System.out.println(population.getFittest().getFitness());
+		    diversity += population.getDiversity();
+		    diversity_count += 1;
+                }
             }
 		}
 		System.out.print("Final Diversity: ");
