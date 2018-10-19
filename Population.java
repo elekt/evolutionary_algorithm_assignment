@@ -85,6 +85,11 @@ public class Population {
                     if (fitness > maxFitness) {
                         maxFitness = fitness;
                     }
+                } else {
+                    double fitness = individual.getFitness();
+                    if (fitness > maxFitness) {
+                        maxFitness = fitness;
+                    }
                 }
             } else {
                 System.out.println("Run out eval cycles");
@@ -111,7 +116,6 @@ public class Population {
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
 
             // CROWDING STUFF
-            System.out.println("CROWDINNNG");
             individuals.removeAll(parents);
             mutations[mutationMethod].mutateIndividuals(children);
             evaluateIndividuals(children);

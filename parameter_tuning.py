@@ -56,16 +56,27 @@ for i in range(0, 20):
                             result = subprocess.check_output(['./build_run_for_params.sh', params, evaluation])
                             score = 0
                             runtime = 0
+                            intermediate_scores = []
+                            final_diversity = 0
+                            mean_diversity = 0
                             for line in result.decode().splitlines():
                                 if line.startswith("Best Score:"):
                                     score = line.split(":")[1]
-                                    print("BAH+")
                                 if line.startswith("Runtime:"):
                                     runtime = line.split(":")[1].replace("ms", "")
+                                if line.startswith("Score:"):
+                                    intermediate_scores.append(line.split(":")[1])
+                                if line.startswith("Final Diversity:"):
+                                    intermediate_scores.append(line.split(":")[1])
+                                if line.startswith("Mean Diversity:"):
+                                    intermediate_scores.append(line.split(":")[1])
 
                             print(result)
                             parameter_dict["score"] = score
                             parameter_dict["runtime"] = runtime
+                            parameter_dict["intermediate_scores"] = intermediate_scores
+                            parameter_dict["final_diversity"] = final_diversity
+                            parameter_dict["mean_diversity"] = mean_diversity
                             json.dump(parameter_dict, outfile)
                             outfile.write('\n')
                             counter += 1

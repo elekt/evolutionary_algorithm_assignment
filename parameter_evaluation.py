@@ -2,7 +2,7 @@ import os
 import json
 import numpy as np
 import matplotlib.pyplot as plt
-from scikit import stats
+# from scikit import stats
 
 files = os.listdir(os.getcwd())
 
@@ -26,7 +26,7 @@ for item in files:
 
 for (k, v) in scores.items():
     means_scores[k] = np.mean(v)
-    print(stats.wilcoxon())
+    # print(stats.wilcoxon())
 plt.bar(range(len(means_scores)), means_scores.values(), align='center')
 plt.xticks(range(len(means_scores)), means_scores.keys())
 plt.show()

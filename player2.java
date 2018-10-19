@@ -45,10 +45,11 @@ public class player2 implements ContestSubmission
 
         subPop = getAlgorithmParams().get("subPopulationSize").intValue();
         islands = getAlgorithmParams().get("numberOfIslands").intValue();
-//        // Do sth with property values, e.g. specify relevant settings of your algorithm
-//        if(!isMultimodal){
-//            islands = 1;
-//        }
+        // Do sth with property values, e.g. specify relevant settings of your algorithm
+        if(!isMultimodal){
+            islands = 1;
+        }
+        islands = 1;
 
         popSize = islands * subPop;
     }
@@ -61,11 +62,13 @@ public class player2 implements ContestSubmission
 
         // init population
         population = new Population(popSize, rnd, evaluation, islands, paramMap);
-	double diversity = 0.0;
-	int diversity_count = 0;
+        double diversity = 0.0;
+        int diversity_count = 0;
         while(population.getEvaluationCount() < evaluations_limit){
             // Select parents
             double currentFitness = population.evaluatePopulation();
+            System.out.print("Score: ");
+            System.out.println(currentFitness);
             try {
                 if (islands > 1){
                     population.nextGenerationIslands(generation);
@@ -86,8 +89,8 @@ public class player2 implements ContestSubmission
 //                //System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
 //                System.out.print("Score: ");
 //                System.out.println(currentFitness);
-		diversity += population.getDiversity();
-		diversity_count += 1;
+                diversity += population.getDiversity();
+                diversity_count += 1;
             }
 		}
 		System.out.print("Final Diversity: ");

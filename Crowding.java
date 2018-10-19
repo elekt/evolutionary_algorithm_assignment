@@ -21,17 +21,13 @@ public class Crowding {
 
         if(d11+d22 <= d12+d21) {
             if(children.get(0).getFitness() > parents.get(0).getFitness()) {
-                System.out.println("FIRST CHILD BEATS PARENT 1");
                 ret.add(children.get(0));
             } else {
-                System.out.println("PARENT 1 ");
                 ret.add(parents.get(0));
             }
             if(children.get(1).getFitness() > parents.get(1).getFitness()) {
-                System.out.println("CHILD 2");
                 ret.add(children.get(1));
             } else {
-                System.out.println("PARENT 2");
                 ret.add(parents.get(1));
             }
         } else {
