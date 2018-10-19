@@ -45,10 +45,10 @@ public class player2 implements ContestSubmission
 
         subPop = getAlgorithmParams().get("subPopulationSize").intValue();
         islands = getAlgorithmParams().get("numberOfIslands").intValue();
-        // Do sth with property values, e.g. specify relevant settings of your algorithm
-        if(!isMultimodal){
-            islands = 1;
-        }
+//        // Do sth with property values, e.g. specify relevant settings of your algorithm
+//        if(!isMultimodal){
+//            islands = 1;
+//        }
 
         popSize = islands * subPop;
     }

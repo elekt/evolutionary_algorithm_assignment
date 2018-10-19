@@ -20,7 +20,7 @@ public class Population {
     private int islands;
     private Exchange[] exchange;
     private Map<String, Double> paramMap;
-    
+    private Crowding crowding;
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands, Map<String, Double> _paramMap) {
         expectedPopulationSize = _size;
@@ -53,6 +53,8 @@ public class Population {
                                      new ExchangeRandom(),
                                      new ExchangePickFromFittestHalf()};
 
+	    crowding = new Crowding();
+
         parentSelectionMethod = paramMap.get("parentSelectionMethod").intValue();
         crossoverMethod = paramMap.get("crossoverMethod").intValue();
 	    mutationMethod = paramMap.get("mutationMethod").intValue();
@@ -69,8 +71,12 @@ public class Population {
     }
 
     public double evaluatePopulation() {
+        return evaluateIndividuals(individuals);
+    }
+
+    public double evaluateIndividuals(List<Individual> individualsToEvaluate) {
         double maxFitness = 0.0;
-        for (Individual individual : individuals) {
+        for (Individual individual : individualsToEvaluate) {
             if(evals <= evalsLimit) {
                 if(individual.getFitness() < 0.0) {
                     double fitness = (double) evaluation.evaluate(individual.getGenome());
@@ -90,9 +96,6 @@ public class Population {
 
     public void nextGeneration() throws IllegalArgumentException {
 
-        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
-        // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
-
         evaluatePopulation();
 
         // parent selection
@@ -101,18 +104,21 @@ public class Population {
         // parent selection
         List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 
-
-
         // crossover
-        List<Individual> children = new ArrayList<>();
         Collections.sort(matingPool);
         for (int i = 0; i < matingPool.size(); i = i+2) {
-            children.addAll(crossover[crossoverMethod].crossover(matingPool.subList(i, i + 2)));
+            List<Individual> parents = matingPool.subList(i, i + 2);
+            List<Individual> children = crossover[crossoverMethod].crossover(parents);
+
+            // CROWDING STUFF
+            System.out.println("CROWDINNNG");
+            individuals.removeAll(parents);
+            mutations[mutationMethod].mutateIndividuals(children);
+            evaluateIndividuals(children);
+            List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
+            individuals.addAll(crowdedIndividuals);
         }
 
-        // select random mutation
-        mutations[mutationMethod].mutateIndividuals(children);
-	    individuals.addAll(children);
         // before selection update fitness values
         evaluatePopulation();
 
@@ -322,4 +328,6 @@ public class Population {
      public int getEvaluationCount() {		
          return evals;		
      }
+
 }
+
