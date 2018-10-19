@@ -18,7 +18,7 @@ for i in range(0, 20):
     prev_percent = 0
     print("{} %".format(int(prev_percent)))
     with open("new_params{}.jl".format(int(time.time())), "w") as outfile:
-        for evaluation in ["SchaffersEvaluation"]:
+        for evaluation in ["BentCigarFunction"]:
             for subPopulationSize in range(20, 101, 20):
                 for numberOfIslands in [3, 5, 10, 20]:
                     for migrationSize in range(2, 6):
@@ -65,11 +65,11 @@ for i in range(0, 20):
                                 if line.startswith("Runtime:"):
                                     runtime = line.split(":")[1].replace("ms", "")
                                 if line.startswith("Score:"):
-                                    intermediate_scores.append(line.split(":")[1])
+                                    intermediate_scores.append(line.split(":")[1].strip())
                                 if line.startswith("Final Diversity:"):
-                                    intermediate_scores.append(line.split(":")[1])
+                                    final_diversity = line.split(":")[1].strip()
                                 if line.startswith("Mean Diversity:"):
-                                    intermediate_scores.append(line.split(":")[1])
+                                    mean_diversity = line.split(":")[1].strip()
 
                             print(result)
                             parameter_dict["score"] = score

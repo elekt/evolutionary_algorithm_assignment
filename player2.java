@@ -94,7 +94,7 @@ public class player2 implements ContestSubmission
             else {
                  if(generation % 100 == 0) {
 		    System.out.print("Score: ");
-                    System.out.println(population.getFittest().getFitness());
+            System.out.println(population.getFittest().getFitness());
 		    diversity += population.getDiversity();
 		    diversity_count += 1;
                 }
