@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.lang.Math;
 
 public class UniformMutation extends BaseMutation{
 
@@ -26,8 +27,8 @@ public class UniformMutation extends BaseMutation{
             boolean isMutating = rnd.nextDouble() > mutationProbability;
 
             if(isMutating) {
-                double evalRate = 1.001 - Population.evals / (double)maxEvalCount;
-                double mutationValue = evalRate * mutationSpeed * rnd.nextDouble();
+                double evalRate = Math.exp(-mutationSpeed * (Population.evals / (double)maxEvalCount));
+                double mutationValue = evalRate * 5 * rnd.nextDouble();
                 double currentValue = individual.getGene(i);
                 boolean isAdding = rnd.nextDouble()>0.5;
                 double mutatedValue = isAdding ? currentValue + mutationValue : currentValue - mutationValue;
