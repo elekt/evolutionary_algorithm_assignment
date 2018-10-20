@@ -50,7 +50,7 @@ katsuura_params_dict = {
 	"migrationInterval":500,
 	"UniformMutationProbability":0.8,
 	"UniformMutationSpeed":10,
-	"TournamentSelectionMatingPoolSize":6,
+	"TournamentSelectionMatingPoolSize":4,
 	"TournamentSelectionNumberOfParticipiants":10,
 	"roundRobinroundRobinTournamentSurvivorSelectionSize":10
 }
