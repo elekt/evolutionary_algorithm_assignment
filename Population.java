@@ -85,20 +85,15 @@ public class Population {
 
         evaluatePopulation();
 
-        parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
+        List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 
-        // parent selection
-        Collections.sort(individuals);
-
-        List<Individual> parents = individuals.subList(0, 2);
-        List<Individual> children = crossover[crossoverMethod].crossover(parents);
-        parents = individuals.subList(2, 4);
-        children.addAll(crossover[crossoverMethod].crossover(parents));
-        individuals.addAll(children);
-
-        // select random mutation
-        mutations[mutationMethod].mutateIndividuals(individuals);
-
+        // crossover
+        Collections.sort(matingPool);
+        for (int i = 0; i < matingPool.size(); i = i+2) {
+            List<Individual> parents = matingPool.subList(i, i + 2);
+            List<Individual> children = crossover[crossoverMethod].crossover(parents);
+            mutations[mutationMethod].mutateIndividuals(children);
+        }
         // before selection update fitness values
         evaluatePopulation();
 

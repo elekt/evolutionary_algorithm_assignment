@@ -5,6 +5,7 @@ import time
 import timeit
 import math
 import matplotlib.pyplot as plt
+import pickle
 
 bent_cigar_params_dict = {
     "mutationMethod": 1,
@@ -28,17 +29,29 @@ schaffers_params_dict = {
     "crossoverMethod": 3
 }
 
-result_array = []
+katsuura_params_dict = {
+    "mutationMethod": 0,
+    "NumberOfParticipants": 5.0,
+    "MatingPoolSize": 4,
+    "MutationProbability": 0.5,
+    "PopulationSize": 50,
+    "MutationSpeed": 10.0,
+    "SurvivorSelectionSize": 4,
+    "crossoverMethod": 3
+}
 
-def make_process(parameter_dict):
-    global result_array
+result_bent_cigar_array = []
+result_schaffers_array = []
+result_katsuura_array = []
+
+def make_process(parameter_dict, result_array, evaluation):
     params = ""
     for k,v in parameter_dict.items():
         params += "{}:{},".format(k, v)
     params = params[:-1]
     result_dict = {}
 
-    result = subprocess.check_output(['./build_run_for_params.sh', params, "BentCigarFunction"])
+    result = subprocess.check_output(['./build_run_for_params.sh', params, evaluation])
     score = 0
     runtime = 0
     intermediate_scores = []
@@ -64,21 +77,31 @@ def make_process(parameter_dict):
     result_dict["final_diversity"] = final_diversity
     result_dict["mean_diversity"] = mean_diversity
     result_array.append(result_dict)
-    return  result_dict
-
-start = timeit.default_timer()
-
-for i in range(0, 1):
-    result = make_process(bent_cigar_params_dict)
-    if i == 0:
-        print(len(result["intermediate_scores"]))
-        plt.plot(result["intermediate_scores"])
-        plt.ylabel('Score')
-        plt.xlabel('Number of evaluations')
-        # plt.xticks(range(0, len(result["intermediate_scores"]), 50))
-        # plt.yticks(np.arange(0, 10, 1.0))
-        plt.show()
+    return result_dict
 
 
-stop = timeit.default_timer()
-print('Runime: {} sec'.format(stop - start))
+for i in range(0, 100):
+    print(make_process(katsuura_params_dict, result_katsuura_array, "KatsuuraEvaluation")["score"])
+    print(make_process(bent_cigar_params_dict, result_bent_cigar_array, "BentCigarFunction")["score"])
+    print(make_process(schaffers_params_dict, result_schaffers_array, "SchaffersEvaluation")["score"])
+
+
+with open('bent_cigar_benchmark.pkl', 'wb') as output:
+    pickle.dump(result_bent_cigar_array, output, pickle.HIGHEST_PROTOCOL)
+
+with open('schaffers_benchmark.pkl', 'wb') as output:
+    pickle.dump(result_schaffers_array, output, pickle.HIGHEST_PROTOCOL)
+
+with open('katsuura_benchmark.pkl', 'wb') as output:
+    pickle.dump(result_katsuura_array, output, pickle.HIGHEST_PROTOCOL)
+
+
+## read
+with open('bent_cigar_benchmark.pkl', 'rb') as input:
+    print(pickle.load(input))
+
+with open('schaffers_benchmark.pkl', 'rb') as input:
+    print(pickle.load(input))
+
+with open('katsuura_benchmark.pkl', 'rb') as input:
+    print(pickle.load(input))
