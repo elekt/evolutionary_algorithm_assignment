@@ -17,6 +17,7 @@ public class Population {
     private int mutationMethod;
     private int parentSelectionMethod;
     private Selection survivorSelection;
+    private Crowding crowding = new Crowding();
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, Map<String, Double> paramMap) {
         expectedPopulationSize = _size;
@@ -55,8 +56,12 @@ public class Population {
     }
 
     public double evaluatePopulation() {
+        return evaluateIndividuals(individuals);
+    }
+
+    public double evaluateIndividuals(List<Individual> individualsToEvaluate) {
         double maxFitness = 0.0;
-        for (Individual individual : individuals) {
+        for (Individual individual : individualsToEvaluate) {
             if(evals <= evalsLimit) {
                 double fitness;
                 if(individual.getFitness() < 0.0) {
@@ -93,12 +98,17 @@ public class Population {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
             mutations[mutationMethod].mutateIndividuals(children);
+
+            // CROWDING STUFF
+            individuals.removeAll(parents);
+            mutations[mutationMethod].mutateIndividuals(children);
+            evaluateIndividuals(children);
+            List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
+            individuals.addAll(crowdedIndividuals);
         }
         // before selection update fitness values
         evaluatePopulation();
 
-        // survivor selection
-        individuals = survivorSelection.selectIndividuals(individuals, expectedPopulationSize);
     }
 
     public Individual getFittest() {
