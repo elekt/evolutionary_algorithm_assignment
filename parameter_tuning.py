@@ -19,14 +19,15 @@ for i in range(0, 20):
     print("{} %".format(int(prev_percent)))
     with open("new_params{}.jl".format(int(time.time())), "w") as outfile:
         for evaluation in ["BentCigarFunction"]:
-            for subPopulationSize in range(20, 101, 20):
-                for numberOfIslands in [3, 5, 10, 20]:
-                    for migrationSize in range(2, 6):
+            for subPopulationSize in range(10, 20, 5):
+                for numberOfIslands in [1,3,5]:
+                    for UniformMutationSpeed in [3,5,7,9]:
                         for migrationInterval in [50, 100, 150]:
+			    
                             TournamentSelectionMatingPoolSize = 2
                             TournamentSelectionNumberOfParticipiants = 3
                             UniformMutationProbability = 0.5
-                            UniformMutationSpeed = 1.9
+                            migrationSize = 2
                             roundRobinroundRobinTournamentSurvivorSelectionSize = 10
 
                             parameter_dict["subPopulationSize"] = subPopulationSize
@@ -59,20 +60,19 @@ for i in range(0, 20):
                             intermediate_scores = []
                             final_diversity = 0
                             mean_diversity = 0
-                            lines = result.decode().splitlines()
-                            for line in lines:
+                            for line in result.decode().splitlines():
                                 if line.startswith("Best Score:"):
                                     score = line.split(":")[1]
                                 if line.startswith("Runtime:"):
                                     runtime = line.split(":")[1].replace("ms", "")
                                 if line.startswith("Score:"):
-                                    intermediate_scores.append(line.split(":")[1].strip())
+                                    intermediate_scores.append(line.split(":")[1])
                                 if line.startswith("Final Diversity:"):
-                                    final_diversity = line.split(":")[1].strip()
+                                    intermediate_scores.append(line.split(":")[1])
                                 if line.startswith("Mean Diversity:"):
-                                    mean_diversity = line.split(":")[1].strip()
+                                    intermediate_scores.append(line.split(":")[1])
 
-                            print(lines[-2:])
+                            print(result)
                             parameter_dict["score"] = score
                             parameter_dict["runtime"] = runtime
                             parameter_dict["intermediate_scores"] = intermediate_scores

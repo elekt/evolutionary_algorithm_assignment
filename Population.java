@@ -21,7 +21,6 @@ public class Population {
     private Exchange[] exchange;
     private Map<String, Double> paramMap;
     private Crowding crowding;
-    private boolean isCrowding;
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, int _islands, Map<String, Double> _paramMap) {
         expectedPopulationSize = _size;
@@ -34,18 +33,15 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
 
-        isCrowding = paramMap.get("crowding") == 1;
-
         // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
         crossover = new Crossover[] {  new OnePointCrossover(),
                                         new TwoPointCrossover(),
                                         new UniformCrossover(),
                                         new BlendCrossover(),
-                                        new WholeArithmeticCrossover(0.5)};
+                                        new WholeArithmeticCrossover(0.51)};
 
         mutations = new Mutation[] {    new InversionMutation(paramMap.getOrDefault("InversionMutationProbability, 0.5", 0.5)),
                                         new UniformMutation(paramMap.getOrDefault("UniformMutationProbability", 0.5), paramMap.getOrDefault("UniformMutationSpeed", 0.5), evalsLimit),
-                                        new NonUniformMutation(paramMap.getOrDefault("SimpleMutationProbability", 0.5)),
                                         new SwapMutation(paramMap.getOrDefault("SwapMutationProbability", 0.5), paramMap.getOrDefault("SwapMutationNumberOfSwaps", 0.5).intValue()),
                                         new ScrambleMutation(paramMap.getOrDefault("ScrambleMutationProbability", 0.5)) };
 
@@ -118,17 +114,13 @@ public class Population {
         for (int i = 0; i < matingPool.size(); i = i+2) {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
-            mutations[mutationMethod].mutateIndividuals(children);
 
             // CROWDING STUFF
-            if(isCrowding) {
-                individuals.removeAll(parents);
-                evaluateIndividuals(children);
-                List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
-                individuals.addAll(crowdedIndividuals);
-            } else {
-                individuals.addAll(children);
-            }
+            individuals.removeAll(parents);
+            mutations[mutationMethod].mutateIndividuals(children);
+            evaluateIndividuals(children);
+            List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
+            individuals.addAll(crowdedIndividuals);
         }
 
         // before selection update fitness values
@@ -152,6 +144,7 @@ public class Population {
         List<Individual> leftIslandPopulation = new ArrayList<>();
         List<Individual> rightIslandPopulation = new ArrayList<>();
 
+
         int migrationInterval = paramMap.get("migrationInterval").intValue();
 
 
@@ -166,9 +159,9 @@ public class Population {
 
        if (islandAlgorithm == "ordered_distinction"){
             int count = 0;
-            int parentSelectionCount = 0;
-            int crossoverCount = 0;
-            int mutationCount = 0;
+	    int parentSelectionCount = 0;
+	    int crossoverCount = 0;
+	    int mutationCount = 0;
             while (count < islands) { 
 		if (count % (crossover.length * mutations.length) == 0) {
 		    parentSelectionCount = (parentSelectionCount + 1 ) % parentSelection.length;
@@ -188,6 +181,7 @@ public class Population {
 	Properties props = evaluation.getProperties();
 	boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
+	//System.out.println(Boolean.parseBoolean(props.getProperty("Multimodal")));
         for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
             // islands notes:
@@ -214,7 +208,9 @@ public class Population {
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
-            int migrationStart = 2000;
+	    //Properties props = evaluation.getProperties();
+	    
+	    int migrationStart = 2000;
             if ((generation % migrationInterval == 0) & ((isMultimodal & !hasStructure & generation > migrationStart))) {
                 // get left and right subPopulations if considered a torus
 

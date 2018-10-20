@@ -40,7 +40,7 @@ public class RoundRobinSelection implements Selection {
         //Collections.sort(individuals);
 	//System.out.println(individuals);
 	
-        individuals = individuals.subList(0, populationSize);
+        individuals = individuals.subList(0, populationSize > individuals.size() ? individuals.size() : populationSize);
 
         return individuals;
     }
