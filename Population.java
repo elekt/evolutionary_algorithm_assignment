@@ -74,6 +74,7 @@ public class Population {
                 break;
             }
         }
+        System.out.println(String.format("Score: %f", getFittest().getFitness()));
         return maxFitness;
     }
 

@@ -5,12 +5,6 @@ import time
 import timeit
 import os
 
-parameter_dict = {
-    "parentSelectionMethod": 1,
-    "crossoverMethod": 4,
-    "mutationMethod": 1,
-    "exchangeMethod": 0
-}
 
 start = timeit.default_timer()
 for i in range(0, 20):
@@ -28,17 +22,6 @@ for i in range(0, 20):
                             UniformMutationProbability = 0.5
                             UniformMutationSpeed = 1.9
                             roundRobinroundRobinTournamentSurvivorSelectionSize = 10
-
-                            parameter_dict["subPopulationSize"] = subPopulationSize
-                            parameter_dict["numberOfIslands"] = numberOfIslands
-                            parameter_dict["migrationSize"] = migrationSize
-                            parameter_dict["migrationInterval"] = migrationInterval
-                            parameter_dict["UniformMutationProbability"] = UniformMutationProbability
-                            parameter_dict["UniformMutationSpeed"] = UniformMutationSpeed
-                            parameter_dict["TournamentSelectionMatingPoolSize"] = TournamentSelectionMatingPoolSize
-                            parameter_dict["TournamentSelectionNumberOfParticipiants"] = TournamentSelectionNumberOfParticipiants
-                            parameter_dict["roundRobinroundRobinTournamentSurvivorSelectionSize"] = roundRobinroundRobinTournamentSurvivorSelectionSize
-                            parameter_dict["evaluation"] = evaluation
 
                             params = f"subPopulationSize:{parameter_dict['subPopulationSize']}," \
                                      f"numberOfIslands:{parameter_dict['numberOfIslands']}," \

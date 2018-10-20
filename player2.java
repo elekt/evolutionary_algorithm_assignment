@@ -18,11 +18,7 @@ public class player2 implements ContestSubmission
 		rnd = new Random();
 	}
 	
-	public void setSeed(long seed)
-	{
-		// Set seed of algortihms random process
-		rnd.setSeed(seed);
-	}
+	public void setSeed(long seed) { }
 
 	public void setEvaluation(ContestEvaluation evaluation)
 	{
@@ -63,8 +59,6 @@ public class player2 implements ContestSubmission
                 System.out.println(e.getMessage());
                 break;
             }
-
-            System.out.println(String.format("Score: %f", population.getFittest().getFitness()));
 
             diversity += population.getDiversity();
             diversity_count += 1;

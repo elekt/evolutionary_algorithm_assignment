@@ -4,34 +4,69 @@ import numpy as np
 import matplotlib.pyplot as plt
 # from scikit import stats
 
-files = os.listdir(os.getcwd())
-
-scores = {}
-means_scores = {}
-standard_deviation_scores = {}
 params_array = []
-for item in files:
+scores_bent_cigar = []
+scores_schaffers = []
+for item in ["basic_algo_params1540035363.jl"]:
     if os.path.isfile(item):
-        if item.startswith("new_params") and item.endswith(".jl"):
-            with open(item, 'r') as f:
-                line_number = 0
-                for line in f:
-                    params = json.loads(line)
-                    params_array.append(params)
-                    score = float(params["score"])
-                    if line_number not in scores:
-                        scores[line_number] = []
-                    scores[line_number].append(score)
-                    line_number += 1
+        with open(item, 'r') as f:
+            line_number = 0
+            for line in f:
+                params = json.loads(line)
+                params_array.append(params)
+                score = float(params["score"])
+                if params["evaluation"] == "BentCigarFunction":
+                    scores_bent_cigar.append((score, line_number))
+                if params["evaluation"] == "SchaffersEvaluation":
+                    scores_schaffers.append((score, line_number))
+                line_number += 1
 
-for (k, v) in scores.items():
-    means_scores[k] = np.mean(v)
-    # print(stats.wilcoxon())
-plt.bar(range(len(means_scores)), means_scores.values(), align='center')
-plt.xticks(range(len(means_scores)), means_scores.keys())
-plt.show()
+mean_bent_cigar = np.mean([i[0] for i in scores_bent_cigar])
+mean_schaffers = np.mean([i[0] for i in scores_schaffers])
+
+sorted_bent_cigar = sorted(scores_bent_cigar, key=lambda tup: tup[0])[-1:]
+# print(sorted_bent_cigar)
 
 
-for k, v in means_scores.items():
-    if means_scores[k] > 8.5:
-        print("{}\n{}\n{}\n".format(params_array[k], scores[k], means_scores[k]))
+for score, i in sorted_bent_cigar:
+    print("A param set:")
+    print("mutationMethod: {}".format(params_array[i]['mutationMethod']))
+    print("NumberOfParticipants: {}".format(params_array[i]['NumberOfParticipants']))
+    print("MatingPoolSize: {}".format(params_array[i]['MatingPoolSize']))
+    print("MutationProbability: {}".format(params_array[i]['MutationProbability']))
+    print("PopulationSize: {}".format(params_array[i]['PopulationSize']))
+    print("MutationSpeed: {}".format(params_array[i]['MutationSpeed']))
+    print("SurvivorSelectionSize: {}".format(params_array[i]['SurvivorSelectionSize']))
+    print("score: {}".format(params_array[i]['score']))
+    print("crossoverMethod: {}".format(params_array[i]['crossoverMethod']))
+    print("runtime: {}".format(params_array[i]['runtime']))
+    print("evaluation: {}".format(params_array[i]['evaluation']))
+    print()
+
+sorted_schaffers = sorted(scores_schaffers, key=lambda tup: tup[0])[-1:]
+print(sorted_schaffers)
+
+for score, i in sorted_schaffers:
+    print("A param set:")
+    print("mutationMethod: {}".format(params_array[i]['mutationMethod']))
+    print("NumberOfParticipants: {}".format(params_array[i]['NumberOfParticipants']))
+    print("MatingPoolSize: {}".format(params_array[i]['MatingPoolSize']))
+    print("MutationProbability: {}".format(params_array[i]['MutationProbability']))
+    print("PopulationSize: {}".format(params_array[i]['PopulationSize']))
+    print("MutationSpeed: {}".format(params_array[i]['MutationSpeed']))
+    print("SurvivorSelectionSize: {}".format(params_array[i]['SurvivorSelectionSize']))
+    print("score: {}".format(params_array[i]['score']))
+    print("crossoverMethod: {}".format(params_array[i]['crossoverMethod']))
+    print("runtime: {}".format(params_array[i]['runtime']))
+    print("evaluation: {}".format(params_array[i]['evaluation']))
+    print()
+
+
+# plt.bar(range(len(means_scores)), means_scores.values(), align='center')
+# plt.xticks(range(len(means_scores)), means_scores.keys())
+# plt.show()
+#
+#
+# for k, v in means_scores.items():
+#     if means_scores[k] > 8.5:
+#         print("{}\n{}\n{}\n".format(params_array[k], scores[k], means_scores[k]))
