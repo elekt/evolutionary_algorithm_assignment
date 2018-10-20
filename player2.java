@@ -1,6 +1,8 @@
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Properties;
 
@@ -31,7 +33,6 @@ public class player2 implements ContestSubmission
 		Properties props = evaluation.getProperties();
         // Get evaluation limit
         evaluations_limit = Integer.parseInt(props.getProperty("Evaluations"));
-        evaluations_limit = 1000;
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
@@ -46,11 +47,13 @@ public class player2 implements ContestSubmission
         }
     }
 
-    public void run()
-	{
+    public void run() {
 
+        double diversity = 0.0;
+        int diversity_count = 0;
+        Map<String, Double> paramMap = getAlgorithmParams();
         // init population
-        population = new Population(10, rnd, evaluation);
+        population = new Population(paramMap.get("PopulationSize").intValue(), rnd, evaluation, paramMap);
         // calculate fitness
         while(population.getEvaluationCount() < evaluations_limit){
 
@@ -61,11 +64,33 @@ public class player2 implements ContestSubmission
                 break;
             }
 
-            if(population.getEvaluationCount() % 1 == 0) {
-                System.out.println(String.format("Eval: %d Score: %f", population.getEvaluationCount(), population.getFittest().getFitness()));
-            }
+            System.out.println(String.format("Score: %f", population.getFittest().getFitness()));
+
+            diversity += population.getDiversity();
+            diversity_count += 1;
 
         }
+
+        System.out.print("Final Diversity: ");
+        System.out.println(population.getDiversity());
+        System.out.print("Mean Diversity: ");
+        System.out.println(diversity/diversity_count);
         System.out.print("Best ");
 	}
+
+
+
+    private Map<String, Double> getAlgorithmParams() {
+        Map<String, Double> ret = new HashMap<>();
+
+        String s = System.getProperty("var1");
+
+        String[] pairs = s.split(",");
+        for (int i=0; i<pairs.length; i++) {
+            String pair = pairs[i];
+            String[] keyValue = pair.split(":");
+            ret.put(keyValue[0], Double.valueOf(keyValue[1]));
+        }
+        return ret;
+    }
 }

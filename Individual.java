@@ -8,6 +8,7 @@ public class Individual implements Comparable<Individual>{
     private double maxValue = 5;
     private double minValue = -5;
     private int dimensions = 10;
+    public int wins = 0;
 
     public Individual(Random _rnd) {
         genome = new double[dimensions];

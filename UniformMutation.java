@@ -2,14 +2,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleMutation extends BaseMutation{
+public class UniformMutation extends BaseMutation{
 
     private double mutationProbability;
     private double mutationSpeed;
     private Random rnd;
+    private int maxEvalCount;
 
 
-    public SimpleMutation(double mutationProbability, double mutationSpeed) {
+    public UniformMutation(double mutationProbability, double mutationSpeed, int maxEvalCount) {
+        this.maxEvalCount = maxEvalCount;
 
         if(mutationProbability > 1.0 || mutationProbability < 0.0){
             throw new IllegalArgumentException("Probability can only be between 0.0 and 1.0");
@@ -26,7 +28,8 @@ public class SimpleMutation extends BaseMutation{
             boolean isMutating = rnd.nextDouble() > mutationProbability;
 
             if(isMutating) {
-                double mutationValue = mutationSpeed * rnd.nextDouble();
+                double evalRate = Math.exp(-mutationSpeed * (Population.evals / (double)maxEvalCount));
+                double mutationValue = evalRate * 5 * rnd.nextDouble();
                 double currentValue = individual.getGene(i);
                 boolean isAdding = rnd.nextDouble()>0.5;
                 double mutatedValue = isAdding ? currentValue + mutationValue : currentValue - mutationValue;
