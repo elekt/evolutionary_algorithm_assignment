@@ -55,6 +55,7 @@ public class Population {
         evals = 0;
     }
 
+    int prev_eval_print = -1;
     public double evaluatePopulation() {
         return evaluateIndividuals(individuals);
     }
@@ -79,7 +80,10 @@ public class Population {
                 break;
             }
         }
-        System.out.println(String.format("Score: %f", getFittest().getFitness()));
+        if(evals >prev_eval_print) {
+            System.out.println(String.format("Score: %f Eval: %d", getFittest().getFitness(), evals));
+            prev_eval_print = evals;
+        }
         return maxFitness;
     }
 

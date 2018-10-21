@@ -55,6 +55,7 @@ def make_process(parameter_dict, result_array, evaluation):
     score = 0
     runtime = 0
     intermediate_scores = []
+    eval_number = []
     final_diversity = 0
     mean_diversity = 0
     lines = result.decode().splitlines()
@@ -64,7 +65,8 @@ def make_process(parameter_dict, result_array, evaluation):
         elif line.startswith("Runtime:"):
             runtime = line.split(":")[1].replace("ms", "")
         elif line.startswith("Score:"):
-            intermediate_scores.append(line.split(":")[1].strip())
+            intermediate_scores.append(line.split(" ")[1].strip())
+            eval_number.append(line.split(" ")[3].strip())
         elif line.startswith("Final Diversity:"):
             final_diversity = line.split(":")[1].strip()
         elif line.startswith("Mean Diversity:"):
@@ -74,36 +76,37 @@ def make_process(parameter_dict, result_array, evaluation):
     result_dict["runtime"] = runtime
     result_dict["evaluation"] = "BentCigarFunction"
     result_dict["intermediate_scores"] = intermediate_scores
+    result_dict["eval_number"] = eval_number
     result_dict["final_diversity"] = final_diversity
     result_dict["mean_diversity"] = mean_diversity
     result_array.append(result_dict)
     return result_dict
 
 
-for i in range(0, 100):
+for i in range(0, 10):
     print(i)
-    print(make_process(katsuura_params_dict, result_katsuura_array, "KatsuuraEvaluation")["score"])
     print(make_process(bent_cigar_params_dict, result_bent_cigar_array, "BentCigarFunction")["score"])
+    print(make_process(katsuura_params_dict, result_katsuura_array, "KatsuuraEvaluation")["score"])
     print(make_process(schaffers_params_dict, result_schaffers_array, "SchaffersEvaluation")["score"])
     print()
 
 
-with open('bent_cigar_benchmark_final.pkl', 'wb') as output:
+with open('bent_cigar_crowding_inter_score.pkl', 'wb') as output:
     pickle.dump(result_bent_cigar_array, output, pickle.HIGHEST_PROTOCOL)
 
-with open('schaffers_benchmark_final.pkl', 'wb') as output:
+with open('schaffers_crowding_inter_score.pkl', 'wb') as output:
     pickle.dump(result_schaffers_array, output, pickle.HIGHEST_PROTOCOL)
 
-with open('katsuura_benchmark_final.pkl', 'wb') as output:
+with open('katsuura_crowding_inter_score.pkl', 'wb') as output:
     pickle.dump(result_katsuura_array, output, pickle.HIGHEST_PROTOCOL)
 
 
 ## read
-with open('bent_cigar_benchmark_final.pkl', 'rb') as input:
-    print(pickle.load(input))
+with open('bent_cigar_crowding_inter_score.pkl', 'rb') as input:
+    print(pickle.load(input)[0]["eval_number"])
 
-with open('schaffers_benchmark_final.pkl', 'rb') as input:
-    print(pickle.load(input))
+with open('schaffers_crowding_inter_score.pkl', 'rb') as input:
+    print(pickle.load(input)[0]["eval_number"])
 
-with open('katsuura_benchmark_final.pkl', 'rb') as input:
-    print(pickle.load(input))
+with open('katsuura_crowding_inter_score.pkl', 'rb') as input:
+    print(pickle.load(input)[0]["eval_number"])
