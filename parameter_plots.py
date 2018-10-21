@@ -42,10 +42,6 @@ katsuura_params_dict = {
     "crossoverMethod": 3
 }
 
-result_bent_cigar_array = []
-result_schaffers_array = []
-result_katsuura_array = []
-
 def make_process(parameter_dict, result_array, evaluation):
     params = ""
     for k,v in parameter_dict.items():
@@ -81,7 +77,6 @@ def make_process(parameter_dict, result_array, evaluation):
     result_array.append(result_dict)
     return result_dict
 
-
 # for i in range(0, 100):
 #     print(i)
 #     print(make_process(katsuura_params_dict, result_katsuura_array, "KatsuuraEvaluation")["score"])
@@ -100,27 +95,43 @@ def make_process(parameter_dict, result_array, evaluation):
 #     pickle.dump(result_katsuura_array, output, pickle.HIGHEST_PROTOCOL)
 
 
-## read
-with open('bent_cigar_crowding.pkl', 'rb') as input:
+with open('bent_cigar_islands_400_new.pkl', 'rb') as input:
     result_bent_cigar_array = pickle.load(input)
     bent_cigar_scores = [param["score"] for param in result_bent_cigar_array]
     bent_cigar_scores  = np.array(bent_cigar_scores).astype(np.float)
-    print(bent_cigar_scores)
 
-    # plt.boxplot(bent_cigar_scores)
-    plt.bar(np.histogram(bent_cigar_scores), 10.0)
+with open('schaffers_islands_400.pkl', 'rb') as input:
+    result_schaffers_array = pickle.load(input)
+    schaffers_scores = [param["score"] for param in result_schaffers_array]
+    schaffers_scores  = np.array(schaffers_scores).astype(np.float)
 
-    plt.xlabel('Smarts')
-    plt.ylabel('Probability')
-    plt.title('Histogram of IQ')
-    plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    plt.axis([0, 100, 0, 10])
-    plt.grid(True)
-    plt.show()
+with open('katsuura_islands_400.pkl', 'rb') as input:
+    result_katsuura_array = pickle.load(input)
+    katsuura_scores = [param["score"] for param in result_katsuura_array]
+    katsuura_scores  = np.array(katsuura_scores).astype(np.float)
 
 
-# with open('schaffers_crowding.pkl', 'rb') as input:
-#     print(pickle.load(input))
-#
-# with open('katsuura_crowding.pkl', 'rb') as input:
-#     print(pickle.load(input))
+print(np.mean(bent_cigar_scores))
+print(np.mean(schaffers_scores))
+print(np.mean(katsuura_scores))
+
+fig = plt.figure()
+fig.suptitle('Islands algorithm', fontsize=14, fontweight='bold')
+
+ax = fig.add_subplot(131)
+ax.boxplot(bent_cigar_scores)
+ax.set_title('Bent Cigar')
+ax.set_ylabel('Score')
+ax.set_yticks(range(1, 11))
+
+ax = fig.add_subplot(132)
+ax.boxplot(schaffers_scores)
+ax.set_title('Schaffers')
+ax.set_yticks(range(1, 11))
+
+ax = fig.add_subplot(133)
+ax.boxplot(katsuura_scores)
+ax.set_title('Katsuura')
+ax.set_yticks(range(1, 11))
+
+plt.show()
