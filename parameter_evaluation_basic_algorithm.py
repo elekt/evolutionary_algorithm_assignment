@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 params_array = []
 scores_bent_cigar = []
 scores_schaffers = []
-for item in ["basic_algo_params1540035363.jl"]:
+for item in ["crowding_algo_params1540039096.jl"]:
     if os.path.isfile(item):
         with open(item, 'r') as f:
             line_number = 0
@@ -24,8 +24,8 @@ for item in ["basic_algo_params1540035363.jl"]:
 mean_bent_cigar = np.mean([i[0] for i in scores_bent_cigar])
 mean_schaffers = np.mean([i[0] for i in scores_schaffers])
 
-sorted_bent_cigar = sorted(scores_bent_cigar, key=lambda tup: tup[0])[-1:]
-# print(sorted_bent_cigar)
+sorted_bent_cigar = sorted(scores_bent_cigar, key=lambda tup: tup[0])[-5:]
+print(sorted_bent_cigar)
 
 
 for score, i in sorted_bent_cigar:
@@ -43,7 +43,7 @@ for score, i in sorted_bent_cigar:
     print("evaluation: {}".format(params_array[i]['evaluation']))
     print()
 
-sorted_schaffers = sorted(scores_schaffers, key=lambda tup: tup[0])[-1:]
+sorted_schaffers = sorted(scores_schaffers, key=lambda tup: tup[0])[-5:]
 print(sorted_schaffers)
 
 for score, i in sorted_schaffers:

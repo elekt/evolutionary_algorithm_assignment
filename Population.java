@@ -17,7 +17,6 @@ public class Population {
     private int mutationMethod;
     private int parentSelectionMethod;
     private Selection survivorSelection;
-    private Crowding crowding = new Crowding();
 
     public Population(int _size, Random _rnd, ContestEvaluation _evaluation, Map<String, Double> paramMap) {
         expectedPopulationSize = _size;
@@ -29,10 +28,10 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
         crossover = new Crossover[] {
-                new TwoPointCrossover(),
-                new UniformCrossover(),
-                new BlendCrossover(),
-                new WholeArithmeticCrossover(0.5)};
+                                    new TwoPointCrossover(),
+                                    new UniformCrossover(),
+                                    new BlendCrossover(),
+                                    new WholeArithmeticCrossover(0.5)};
 
         mutations = new Mutation[] {
                 new UniformMutation(paramMap.get("MutationProbability"), paramMap.get("MutationSpeed"), evalsLimit),
@@ -55,6 +54,7 @@ public class Population {
         evals = 0;
     }
 
+    int prev_eval_print = -1;
     public double evaluatePopulation() {
         return evaluateIndividuals(individuals);
     }
@@ -79,9 +79,9 @@ public class Population {
                 break;
             }
         }
-        if (evals % 1000 == 0) {
-            System.out.println(String.format("Score: %f", getFittest().getFitness()));
-
+        if(evals >prev_eval_print) {
+            System.out.println(String.format("Score: %f Eval: %d", getFittest().getFitness(), evals));
+            prev_eval_print = evals;
         }
         return maxFitness;
     }
@@ -102,59 +102,13 @@ public class Population {
         for (int i = 0; i < matingPool.size(); i = i+2) {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
-
-
-            mutations[mutationMethod].mutateIndividuals(individuals);
-            individuals.removeAll(parents);
-            evaluateIndividuals(children);
-            List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
-            individuals.addAll(crowdedIndividuals);
-
+            mutations[mutationMethod].mutateIndividuals(children);
         }
+        // before selection update fitness values
+        evaluatePopulation();
 
-
-
-
-//        evaluatePopulation();
-//
-//        // parent selection
-//        List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
-//
-//        // crossover
-//        Collections.sort(matingPool);
-//        for (int i = 0; i < matingPool.size(); i = i+2) {
-//            List<Individual> parents = matingPool.subList(i, i + 2);
-//            List<Individual> children = crossover[crossoverMethod].crossover(parents);
-//            mutations[mutationMethod].mutateIndividuals(children);
-
-
-//
-//        evaluatePopulation();
-//
-//        parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
-//
-//        // parent selection
-//        Collections.sort(individuals);
-//
-//        List<Individual> parents = individuals.subList(0, 2);
-//        List<Individual> children = crossover[crossoverMethod].crossover(parents);
-//        parents = individuals.subList(2, 4);
-//        children.addAll(crossover[crossoverMethod].crossover(parents));
-//        individuals.addAll(children);
-//
-//        // CROWDING
-//        mutations[mutationMethod].mutateIndividuals(individuals);
-//        individuals.removeAll(parents);
-//        evaluateIndividuals(children);
-//        List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
-//        individuals.addAll(crowdedIndividuals);
-//
-//
-//        // before selection update fitness values
-//        evaluatePopulation();
-//
-//        // survivor selection
-//        individuals = survivorSelection.selectIndividuals(individuals, expectedPopulationSize);
+        // survivor selection
+        individuals = survivorSelection.selectIndividuals(individuals, expectedPopulationSize);
     }
 
     public Individual getFittest() {
