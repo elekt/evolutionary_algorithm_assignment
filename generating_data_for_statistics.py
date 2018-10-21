@@ -83,7 +83,7 @@ def make_process(parameter_dict, result_array, evaluation):
     return result_dict
 
 
-for i in range(0, 10):
+for i in range(0, 100):
     print(i)
     print(make_process(bent_cigar_params_dict, result_bent_cigar_array, "BentCigarFunction")["score"])
     print(make_process(katsuura_params_dict, result_katsuura_array, "KatsuuraEvaluation")["score"])
