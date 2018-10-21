@@ -29,10 +29,10 @@ public class Population {
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
         crossover = new Crossover[] {
-                new TwoPointCrossover(),
-                new UniformCrossover(),
-                new BlendCrossover(),
-                new WholeArithmeticCrossover(0.5)};
+                                    new TwoPointCrossover(),
+                                    new UniformCrossover(),
+                                    new BlendCrossover(),
+                                    new WholeArithmeticCrossover(0.5)};
 
         mutations = new Mutation[] {
                 new UniformMutation(paramMap.get("MutationProbability"), paramMap.get("MutationSpeed"), evalsLimit),
@@ -95,7 +95,9 @@ public class Population {
         // crossover
         Collections.sort(matingPool);
         for (int i = 0; i < matingPool.size(); i = i+2) {
-            List<Individual> parents = matingPool.subList(i, i + 2);
+            List<Individual> parents = new ArrayList<Individual>();
+            parents.add(matingPool.get(new Random().nextInt(matingPool.size())));
+            parents.add(matingPool.get(new Random().nextInt(matingPool.size())));
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
             mutations[mutationMethod].mutateIndividuals(children);
 
