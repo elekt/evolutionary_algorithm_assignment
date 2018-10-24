@@ -185,7 +185,9 @@ public class Population {
                 
             }
         }
-
+	Properties props = evaluation.getProperties();
+	boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
+        boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
         for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
             // islands notes:
@@ -212,7 +214,8 @@ public class Population {
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
-            if (generation % migrationInterval == 0) {
+            int migrationStart = 2000;
+            if ((generation % migrationInterval == 0) & ((isMultimodal & !hasStructure & generation > migrationStart))) {
                 // get left and right subPopulations if considered a torus
 
                 int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
