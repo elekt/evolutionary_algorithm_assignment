@@ -79,18 +79,15 @@ public class Population {
                 break;
             }
         }
-        if(evals >prev_eval_print) {
+        if(evals >prev_eval_print + 50) {
             System.out.println(String.format("Score: %f Eval: %d", getFittest().getFitness(), evals));
             prev_eval_print = evals;
         }
+
         return maxFitness;
     }
 
     public void nextGeneration() throws IllegalArgumentException {
-
-        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
-        // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
-
 
         evaluatePopulation();
 
@@ -103,6 +100,7 @@ public class Population {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
             mutations[mutationMethod].mutateIndividuals(children);
+            individuals.addAll(children);
         }
         // before selection update fitness values
         evaluatePopulation();
