@@ -11,9 +11,6 @@ public class OnePointCrossover implements Crossover {
         double[] child1 = new double[10];
         double[] child2 = new double[10];
 
-        // Not random, at 5
-        // TO DO: RANDOM??
-
         for (int i = 0; i < 10; i++) {
             if(i<=4) {
                 child1[i] = (parents.get(0).getGenome()[i]);

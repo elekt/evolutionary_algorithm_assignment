@@ -35,17 +35,6 @@ public class RankingSelectionSUS implements Selection {
         // sort from worst (0) to best (mu - 1)
         Collections.reverse(individuals);
 
-
-//        System.out.println("individuals" + individuals.size());
-//        System.out.println("populationsSize" + populationSize);
-//
-//        System.out.println("SORTED");
-//
-//        for (int i=0; i < populationSize; i++) {
-//            System.out.println(individuals.get(i).getFitness());
-//        }
-
-
         return StochasticUniversalSampling(individuals, getCumProbDistribution(populationSize, s), matingPoolSize);
     }
 

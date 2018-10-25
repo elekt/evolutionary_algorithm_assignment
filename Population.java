@@ -32,8 +32,6 @@ public class Population {
         Properties props = evaluation.getProperties();
         evalsLimit = Integer.parseInt(props.getProperty("Evaluations"));
 
-
-        // Choose Crossover method: OnePointCrossover, TwoPointCrossover, UniformCrossover or BlendCrossover
         crossover = new Crossover[] {  new OnePointCrossover(),
                                         new TwoPointCrossover(),
                                         new UniformCrossover(),
@@ -74,6 +72,7 @@ public class Population {
         return evaluateIndividuals(individuals);
     }
 
+    // assign fitness to individuals
     public double evaluateIndividuals(List<Individual> individualsToEvaluate) {
         double maxFitness = 0.0;
         for (Individual individual : individualsToEvaluate) {
@@ -99,12 +98,10 @@ public class Population {
         return maxFitness;
     }
 
+    // execute normal next generation with crowding if only one island
     public void nextGeneration() throws IllegalArgumentException {
 
         evaluatePopulation();
-
-        // parent selection
-        Collections.sort(individuals);
 
         // parent selection
         List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
@@ -115,7 +112,7 @@ public class Population {
             List<Individual> parents = matingPool.subList(i, i + 2);
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
 
-            // CROWDING STUFF
+            // crowding
             individuals.removeAll(parents);
             mutations[mutationMethod].mutateIndividuals(children);
             evaluateIndividuals(children);
@@ -130,6 +127,7 @@ public class Population {
         individuals = selection.selectIndividuals(individuals, expectedPopulationSize);	
     }
 
+    // execute next generation in all existing islands
 	public void nextGenerationIslands(int generation) throws IllegalArgumentException {
 
         // for amount of islands, make subPopulations of the total population, and do
@@ -147,10 +145,11 @@ public class Population {
 
         int migrationInterval = paramMap.get("migrationInterval").intValue();
 
-
-        // Many different islands, each its own operator/algortihm and see what happens? done, not very elegant though
+        // no_distinction: all islands share same operator/algortihm
+        // ordered_distinction: each island its own operator/algortihm
         List<String> islandAlgorithms = Arrays.asList("no_distinction", "ordered_distinction");
 
+        // choose which method to use: NOW SET TO NO_DISTINCTION
         String islandAlgorithm = islandAlgorithms.get(0);
 
         int[] parentSelectionMethodList = new int[islands];
@@ -159,96 +158,73 @@ public class Population {
 
        if (islandAlgorithm == "ordered_distinction"){
             int count = 0;
-	    int parentSelectionCount = 0;
-	    int crossoverCount = 0;
-	    int mutationCount = 0;
-            while (count < islands) { 
-		if (count % (crossover.length * mutations.length) == 0) {
-		    parentSelectionCount = (parentSelectionCount + 1 ) % parentSelection.length;
-		}
-		if (count % (mutations.length) == 0) {
-		    crossoverCount = (crossoverCount + 1 ) % crossover.length;
-		}
-		mutationCount = (mutationCount + 1) % mutations.length;
+            int parentSelectionCount = 0;
+            int crossoverCount = 0;
+            int mutationCount = 0;
 
-		parentSelectionMethodList[count] = parentSelectionCount;
-		crossoverMethodList[count] = crossoverCount;
-		mutationMethodList[count] = mutationCount;
-		++count;
-                
+            while (count < islands) { 
+                if (count % (crossover.length * mutations.length) == 0) {
+                    parentSelectionCount = (parentSelectionCount + 1 ) % parentSelection.length;
+                }
+                if (count % (mutations.length) == 0) {
+                    crossoverCount = (crossoverCount + 1 ) % crossover.length;
+                }
+                mutationCount = (mutationCount + 1) % mutations.length;
+
+                parentSelectionMethodList[count] = parentSelectionCount;
+                crossoverMethodList[count] = crossoverCount;
+                mutationMethodList[count] = mutationCount;
+                ++count;
             }
         }
-	Properties props = evaluation.getProperties();
-	boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
+        Properties props = evaluation.getProperties();
+        boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
-	//System.out.println(Boolean.parseBoolean(props.getProperty("Multimodal")));
-        for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
-            // islands notes:
-            // How long should I evolve the islands?
-            // When should I start with mutations?
-            // Which indivuals to exchange, random/best, and how many? done
+        for(int currentIsland = 0; currentIsland< islands; ++currentIsland){
 
             int migrationSize = paramMap.getOrDefault("migrationSize", 0.5).intValue();
             if (migrationSize >= Math.round(subPopSize/2.0)) {
             	throw new IllegalArgumentException("Amount of individuals to exchange should be lower than half the population");
             }
 
-            // Shall we copy or move individuals between islands?
-            
-	
-
-            // islands, if input islands == 1 in player.java, it will work the same as without islands
-
             // compare the subPopulation variable for the population, in order to select each subPopulation
             individuals.sort((c1, c2) -> Integer.compare(c2.subPopulation, c1.subPopulation));
-
 
             // Select the current island out of the total population.
             List<Individual> currentIslandPopulation = new ArrayList<>(individuals.subList((currentIsland * subPopSize), (currentIsland * subPopSize + subPopSize - 1)));
 
             // migration
-	    //Properties props = evaluation.getProperties();
-	    
-	    int migrationStart = 2000;
-            if ((generation % migrationInterval == 0) & ((isMultimodal & !hasStructure & generation > migrationStart))) {
-                // get left and right subPopulations if considered a torus
+            int migrationStart = 2000;
+                if ((generation % migrationInterval == 0) & ((isMultimodal & !hasStructure & generation > migrationStart))) {
 
-                int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
-                int rightIsland =  ( (currentIsland + 1) % islands % (islands - 1) );
-                leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
-                rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
+                    // get left and right subPopulations if considered a torus
+                    int leftIsland = ( ((currentIsland + (islands - 2))  % (islands - 1)) );
+                    int rightIsland =  ( (currentIsland + 1) % islands % (islands - 1) );
+                    leftIslandPopulation.addAll(individuals.subList((leftIsland*subPopSize),(leftIsland*subPopSize+subPopSize-1)));
+                    rightIslandPopulation.addAll(individuals.subList((rightIsland*subPopSize),(rightIsland*subPopSize+subPopSize-1)));
 
-	        	currentIslandPopulation = exchange[exchangeMethod].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, migrationSize);
-                   
-                leftIslandPopulation.clear();
-                rightIslandPopulation.clear();
+                    currentIslandPopulation = exchange[exchangeMethod].exchange(currentIslandPopulation, leftIslandPopulation, rightIslandPopulation, migrationSize);
+
+                    leftIslandPopulation.clear();
+                    rightIslandPopulation.clear();
+                }
+
+            if (!islandAlgorithm.equals("no_distinction")){
+                parentSelectionMethod = parentSelectionMethodList[currentIsland];
+                crossoverMethod = crossoverMethodList[currentIsland];
+                mutationMethod = mutationMethodList[currentIsland];
+            } else {
+                parentSelectionMethod = paramMap.getOrDefault("parentSelectionMethod", 0.5).intValue();
+                crossoverMethod = paramMap.getOrDefault("crossoverMethod", 0.5).intValue();
+                mutationMethod = paramMap.getOrDefault("mutationMethod", 0.5).intValue();
             }
-
-	    if (!islandAlgorithm.equals("no_distinction")){
-            parentSelectionMethod = parentSelectionMethodList[currentIsland];
-            crossoverMethod = crossoverMethodList[currentIsland];
-            mutationMethod = mutationMethodList[currentIsland];
-        } else {
-            parentSelectionMethod = paramMap.getOrDefault("parentSelectionMethod", 0.5).intValue();
-        	crossoverMethod = paramMap.getOrDefault("crossoverMethod", 0.5).intValue();
-	    	mutationMethod = paramMap.getOrDefault("mutationMethod", 0.5).intValue();
-        }
 
             // From this point onwards, the subpopulation is used for the methods
             Collections.sort(currentIslandPopulation);
 
-	    //System.out.println(currentIslandPopulation.size());
             // parent selection
             List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(currentIslandPopulation, expectedPopulationSize);
-
-//            System.out.println("this is the matingpool");
-//            int n = 0;
-//            for (Individual parent : matingPool) {
-//                System.out.println("parent" + n);
-//                parent.showGenome();
-//                n++;
-//            }
 
             // crossover
             List<Individual> children = new ArrayList<>();
@@ -257,15 +233,12 @@ public class Population {
                 children.addAll(crossover[crossoverMethod].crossover(matingPool.subList(i, i + 2)));
             }
 
-            //children.addAll(crossover.crossover(parents));
-
             // add subPopulation variable for children, should be the same as the parents
             for (Individual child : children) {
                 child.setSubPopulation(currentIsland);
             }
 
-            // select random mutation
-            //mutations[rnd.nextInt(mutations.length)].mutateIndividuals(children);
+            // mutation
             mutations[mutationMethod].mutateIndividuals(children);
 
     	    //evaluate subPopulation:
@@ -280,33 +253,27 @@ public class Population {
             }
 
             currentIslandPopulation.addAll(children);
-            // before selection update fitness values
 
             // selection within subPopulation
             currentIslandPopulation = selection.selectIndividuals(currentIslandPopulation, subPopSize );
 
-            //System.out.println("After selection");
-            //for(Double d : getFitnessList()) {
-            //System.out.print(String.format("%.4f ", d));
-            //}
-            //System.out.println();
-
             //add the subPopulation to a new Population
             newPopulation.addAll(currentIslandPopulation);
         }
+
         // remove the old population, and replace it with the new population.
         individuals.clear();
         individuals.addAll(newPopulation);
         evaluatePopulation();
-	
     }
 
-
+    // get fittest individual of population
     public Individual getFittest() {
         Collections.sort(individuals);
         return individuals.get(0);
     }
 
+    // get population size
     public int getPopulationSize() {
         return individuals.size();
     }
@@ -320,17 +287,19 @@ public class Population {
 
         return ret;
     }
+
+    // get current diversity of the population
     public double getDiversity() {
-	double maxFitness = 0.0;
-	double score = 0.0;
-	Individual fittest = getFittest();
-	double[] fittestGenome = fittest.getGenome();
-	double[] compareGenome;
-	for (Individual individual : individuals) {
-	    compareGenome = individual.getGenome();
-		for(int i=0; i<10; ++i){
-		    score += Math.abs(compareGenome[i] - fittestGenome[i]);
-		} 
+        double maxFitness = 0.0;
+        double score = 0.0;
+        Individual fittest = getFittest();
+        double[] fittestGenome = fittest.getGenome();
+        double[] compareGenome;
+	    for (Individual individual : individuals) {
+            compareGenome = individual.getGenome();
+            for(int i=0; i<10; ++i){
+                score += Math.abs(compareGenome[i] - fittestGenome[i]);
+            }
         }
         return (score/getPopulationSize());
 	}
@@ -338,6 +307,5 @@ public class Population {
      public int getEvaluationCount() {		
          return evals;		
      }
-
 }
 

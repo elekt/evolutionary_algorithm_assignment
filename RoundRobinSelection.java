@@ -26,20 +26,13 @@ public class RoundRobinSelection implements Selection {
 		if (individual.getFitness() > contestant.getFitness()) {
 		    wins += 1;
 		}
-		
+
 	    }
 	    individual.wins = wins;
-	    //System.out.print("Individual: ");
-	    //System.out.print(individual);
-	    //System.out.print(" wins: ");
-	    //System.out.println(wins);
         }
 
         individuals.sort((c1, c2) -> Integer.compare(c2.wins, c1.wins));
-	//System.out.println(individuals);
-        //Collections.sort(individuals);
-	//System.out.println(individuals);
-	
+
         individuals = individuals.subList(0, populationSize > individuals.size() ? individuals.size() : populationSize);
 
         return individuals;
