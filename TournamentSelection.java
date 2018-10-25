@@ -19,23 +19,11 @@ public class TournamentSelection implements Selection {
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
 
-//        // set parameters
-//        matingPoolSize = 2;
-//        numberOfParticipants = 4;
-//
-//        rnd = new Random();
-
         List<Individual> participants = new ArrayList<>();
         List<Individual> matingPool = new ArrayList<>();
 
         int currentMember = 1;
         int currentParticipant;
-
-//        System.out.println("______________POPULATION");
-//        for (int i = 0; i < individuals.size(); i++) {
-//            System.out.println(individuals.get(i).getFitness());
-//        }
-//        System.out.println("\n");
 
         while (currentMember <= matingPoolSize) {
             currentParticipant = 1;
@@ -45,13 +33,6 @@ public class TournamentSelection implements Selection {
             }
 
             Collections.sort(participants);
-
-//            System.out.println("______________TOURNAMENT");
-//            for (int i = 0; i < participants.size(); i++) {
-//                System.out.println(participants.get(i).getFitness());
-//
-//            }
-//            System.out.println("....WINNER:" + participants.get(0).getFitness() + "\n");
 
             matingPool.add(participants.get(0));
             currentMember++;

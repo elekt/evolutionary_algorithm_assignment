@@ -17,11 +17,6 @@ public class UniformParentSelection implements Selection {
     @Override
     public List<Individual> selectIndividuals(List<Individual> individuals, int populationSize) {
 
-//        // set parameters
-//        matingPoolSize = 2;
-//
-//        rnd = new Random();
-
         List<Individual> matingPool = new ArrayList<>();
 
         int currentMember = 1;

@@ -59,6 +59,7 @@ public class Population {
         return evaluateIndividuals(individuals);
     }
 
+    // assign fitness value to individuals
     public double evaluateIndividuals(List<Individual> individualsToEvaluate) {
         double maxFitness = 0.0;
         for (Individual individual : individualsToEvaluate) {
@@ -87,6 +88,7 @@ public class Population {
         return maxFitness;
     }
 
+    // execute next generation
     public void nextGeneration() throws IllegalArgumentException {
 
         evaluatePopulation();
@@ -109,11 +111,13 @@ public class Population {
         individuals = survivorSelection.selectIndividuals(individuals, expectedPopulationSize);
     }
 
+    // get fittest individual from population
     public Individual getFittest() {
         Collections.sort(individuals);
         return individuals.get(0);
     }
 
+    // get population size
     public int getPopulationSize() {
         return individuals.size();
     }
@@ -128,6 +132,7 @@ public class Population {
         return ret;
     }
 
+    // get the current diversity of the population
     public double getDiversity() {
         double maxFitness = 0.0;
         double score = 0.0;

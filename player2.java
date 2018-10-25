@@ -48,9 +48,11 @@ public class player2 implements ContestSubmission
         double diversity = 0.0;
         int diversity_count = 0;
         Map<String, Double> paramMap = getAlgorithmParams();
-        // init population
+
+        // initialize population
         population = new Population(paramMap.get("PopulationSize").intValue(), rnd, evaluation, paramMap);
-        // calculate fitness
+
+        // next generation until evals limit is reached (termination)
         while(population.getEvaluationCount() < evaluations_limit){
 
             try {
@@ -65,14 +67,13 @@ public class player2 implements ContestSubmission
 
         }
 
+        // calc diversity op population
         System.out.print("Final Diversity: ");
         System.out.println(population.getDiversity());
         System.out.print("Mean Diversity: ");
         System.out.println(diversity/diversity_count);
         System.out.print("Best ");
 	}
-
-
 
     private Map<String, Double> getAlgorithmParams() {
         Map<String, Double> ret = new HashMap<>();
