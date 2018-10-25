@@ -60,6 +60,7 @@ public class Population {
         return evaluateIndividuals(individuals);
     }
 
+    // assign fitness to individuals
     public double evaluateIndividuals(List<Individual> individualsToEvaluate) {
         double maxFitness = 0.0;
         for (Individual individual : individualsToEvaluate) {
@@ -87,13 +88,12 @@ public class Population {
         return maxFitness;
     }
 
+    // execute next generation
     public void nextGeneration() throws IllegalArgumentException {
-
-        // TODO: create a better way of parent selection instead of just ranking and select the best individuals
-        // TODO: have a look at how to pair parents for crossover (e.g. always pair the best ones or pair randomly)
 
         evaluatePopulation();
 
+        // parent selection
         List<Individual> matingPool = parentSelection[parentSelectionMethod].selectIndividuals(individuals, expectedPopulationSize);
 
         // crossover
@@ -105,37 +105,37 @@ public class Population {
             List<Individual> children = crossover[crossoverMethod].crossover(parents);
             mutations[mutationMethod].mutateIndividuals(children);
 
-            // CROWDING STUFF
+            // crowding
             individuals.removeAll(parents);
             mutations[mutationMethod].mutateIndividuals(children);
             evaluateIndividuals(children);
             List<Individual> crowdedIndividuals = crowding.crowd(parents, children);
             individuals.addAll(crowdedIndividuals);
         }
-        // before selection update fitness values
-        evaluatePopulation();
-
     }
 
+    // get fittest individual from population
     public Individual getFittest() {
         Collections.sort(individuals);
         return individuals.get(0);
     }
 
+    // get population size
     public int getPopulationSize() {
         return individuals.size();
     }
 
+    // get list of fitness of all individuals in the population
     private double[] getFitnessList() {
         double[] ret = new double[individuals.size()];
 
         for(int i = 0; i<individuals.size(); ++i){
             ret[i] = individuals.get(i).getFitness();
         }
-
         return ret;
     }
 
+    // get current diversity of the population
     public double getDiversity() {
         double maxFitness = 0.0;
         double score = 0.0;
